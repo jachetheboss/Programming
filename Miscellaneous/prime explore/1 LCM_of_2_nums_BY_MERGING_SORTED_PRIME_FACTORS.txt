@@ -1,0 +1,146 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <cmath>
+#include <ctime>
+#include <unordered_set>
+
+using namespace std;
+
+int main()
+{
+    long max_num = 0;
+    cout << "Enter in max num: ";
+    cin >> max_num;
+    cout << '\n';
+    // SIEVE SHOULD STOP AT sqrt(sieve size) !!!!!!!
+    clock_t t1 = clock();
+    // don't do brute force by D, but rather do my consecutive quick_factorization algorithm!
+    int limit = static_cast<int>(floor(sqrt(max_num)));
+    vector<bool> sieve (max_num + 1, true);
+    sieve[0] = false;
+    sieve[1] = false;
+    for(int k = 2; k < limit + 1; ++k){
+        if(sieve[k] == false){
+            continue;
+        }
+        for(int j = k * k; j < sieve.size(); j += k){
+            sieve[j] = false;
+        }
+    }
+    int num_primes = 0;
+    for(int i = 2; i < sieve.size(); ++i){
+        if(sieve[i] == true){
+            num_primes += 1;
+        }
+    }
+    cout << "num_primes: " << num_primes << '\n';
+    vector<vector<int>> factors (max_num + 1, vector<int>());
+    for(int k = 2; k < factors.size(); ++k){ // since we go from small to large, the prime factorization
+                                            // of each number will be in sorted order!
+        if(sieve[k] == false){ // we only want primes!
+            continue;
+        }
+        for(int j = k; j < factors.size(); j += k){
+            factors[j].push_back(k);
+            factors[j].push_back(1); // each vector element has even length, each int pair is 1. prime factor
+                                  // 2. freq of prime factor
+        }
+        long pow_of_k = k; // use long since when int k is large, k * k could overflow max int size
+        pow_of_k *= k; // REMEMBER! IN C++, WHEN INITIALIZING LONG VARIABLE, do not make it the product
+                      // of two large ints. Initialize the long var as the large int, then multiply
+                     // it by the other large int, to prevent UNDEFINED BEHAVIOR AND RANDOM PROGRAM TERMINATION!
+        // instead of long pow_of_k = k * k, k is > 1,000,000, so overflows the int temp var that C++ makes
+        
+        while(pow_of_k < factors.size()){ // depending on size of factors, pow_of_k could realistically
+                                         // overflow the long long (~9 * 10^18) type max size! CAREFUL!
+            for(int j = pow_of_k; j < factors.size(); j += pow_of_k){
+                factors[j][factors[j].size() - 1] += 1;
+            }
+            pow_of_k *= k;
+            // initially wrote pow_of_k *= pow_of_k, but that is wrong, at the
+            // bottom of the code outputs "Debug your algorithm."
+            // Example sequence should be 2, 4, 8, 16, not 2, 4, 16, 256
+        }
+    }
+    
+    // print out the factorizations of nums 1-100
+    // for(int k = 2; k < 101; ++k){
+    //     cout << k << '\n';
+    //     for(int i = 0; i < factors[k].size(); i += 2){
+    //         cout << factors[k][i] << ':' << factors[k][i + 1] << ' ';
+    //     } cout << "\n\n";
+    // }
+    
+    // checker to verity that my consecutive quick_factorizator is correct!
+    bool ok = true;
+    for(int k = 2; k < factors.size(); ++k){
+        int prod = 1;
+        for(int i = 0; i < factors[k].size(); i += 2){
+            prod *= pow(factors[k][i], factors[k][i + 1]);
+        }
+        if(prod != k){
+            ok = false;
+            break;
+        }
+    }
+    if(ok){
+        cout << "Your consecutive quick_factorizor works!" << "\n\n";
+    }else{
+        cout << "Debug your algorithm." << "\n\n";
+    }
+    
+    // D algorithm
+    for(int k = 2; k < factors.size() - 2; ++k){
+        // compare k with k + 2, aka (x-1)(x+1)
+        // two pointers algorithm to merge together factors, based on factors being already sorted
+        int i = 0;
+        int j = 0;
+        vector<int> merged_factors;
+        while(i < factors[k].size() && j < factors[k + 2].size()){
+            if(factors[k][i] < factors[k + 2][j]){
+                merged_factors.push_back(factors[k][i]);
+                merged_factors.push_back(factors[k][i + 1]);
+                i += 2;
+            }else if(factors[k + 2][j] < factors[k][i]){
+                merged_factors.push_back(factors[k + 2][j]);
+                merged_factors.push_back(factors[k + 2][j + 1]);
+                j += 2;
+            }else if(factors[k][i] == factors[k + 2][j]){
+                merged_factors.push_back(factors[k][i]);
+                merged_factors.push_back(factors[k][i + 1] + factors[k + 2][j + 1]);
+                i += 2;
+                j += 2;
+            }
+        }
+        while(i < factors[k].size()){
+            merged_factors.push_back(factors[k][i]);
+            merged_factors.push_back(factors[k][i + 1]);
+            i += 2;
+        }while(j < factors[k + 2].size()){
+            merged_factors.push_back(factors[k + 2][j]);
+            merged_factors.push_back(factors[k + 2][j + 1]);
+            j += 2;
+        }
+        if(k > 10000 && k < 10100){
+            cout << k << " and " << k + 2 << '\n';
+            for(int i = 0; i < merged_factors.size(); i += 2){
+                cout << merged_factors[i] << ':' << merged_factors[i + 1] << ' ';
+            } cout << "\n\n";
+        }
+    }
+    
+    
+    clock_t t2 = clock();
+    cout << "elapsed: " << static_cast<float>(t2 - t1) / CLOCKS_PER_SEC << " seconds" << '\n';
+    return 0;
+}

@@ -1,0 +1,14 @@
+make a computer vision live tennis tracking video project, analyze
+strategy to assist in tennis betting, can backtest this, see if
+it is profitable. What styles match up better, put into account the
+betting odds, use historical h2h matchup data, point-level tactics,
+distance ran so far, fitness level, etc., build up a massive statistical
+model, make sports exciting! Probably works best for top players where
+there is plenty of footage. More difficult to do this for challenger
+level matches? But all challenger matches are livestreamed as well!
+
+Machine learning models of winning percentage for each player in real
+time already exist, can we make a more accurate one? Side by side
+comparison, if it is even more accurate than the betting site version,
+than we can win money! Compare which betting site has the more accurate
+betting model, can exploit that one, until account is banned?

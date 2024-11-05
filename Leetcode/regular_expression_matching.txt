@@ -1,0 +1,107 @@
+// Leetcode 10. regular expression matching
+
+// parse out the regular characters, then the special characters such as . by itself, .*, or a*
+// pretty sure there is a condition such that there are no two consecutive **
+// no parentheses in this version
+
+bool partMatch(string& part, string& sub, int fixed){
+	if(fixed){
+		return sub == part;
+	}
+	// not fixed, part contains special characters
+	if(part == ".*") return true; // ".*" matches any string
+	if(part == ".") return sub.length() == 1;
+	// part must be a fixed alphabetic character followed by an '*'
+	if(sub.length() == 0) return true; // I think a* matches the empty string
+	for(char c : sub){
+		if(c != part[0]) return false;
+	}
+	return true; // all characters in sub are equal to the repeatable character in part, e.g. a in a*
+}
+
+bool regexMatch(string& s, vector<string>& parts, vector<int>& is_fixed, int i, int j){ 
+	// i is the idx for parts and is_fixed
+	// j is idx in s
+	if(i == (int)parts.size() - 1){
+		string sub = s.substr(j); // sub can be an empty string, and still successfully match!
+		bool match = partMatch(parts[i], sub, is_fixed[i]);
+		if(match) return true;
+	}
+	else{
+		if(is_fixed[i] == 1){
+			int len = parts[i].length();
+			string sub = s.substr(j, len);
+			if(partMatch(parts[i], sub, 1){
+				return regexMatch(s, parts, is_fixed, i + 1, j + len);
+			} else return false;
+		}
+		else{
+			for(int len = 0; len <= (int)s.length() - j; ++len){
+				string sub = s.substr(j, len);
+				if(partMatch(parts[i], sub, 0){
+					bool ret = regexMatch(s, parts, is_fixed, i + 1, j + len);
+					if(ret == true) return true;
+				}
+			}
+			return false;
+		}
+	}
+	return false;
+}
+
+vector<string> parts; // fixed substrings of the pattern without the special characters
+vector<int> is_fixed;
+string part = "";
+int i = 0;
+while(i < pattern.length()){
+	char c = pattern[i];
+	if(c == '.'){
+		if(part != ""){
+			parts.push_back(part);
+			is_fixed.push_back(1);
+			part = "";
+		}
+
+		if(i == (int)pattern.length() - 1){
+			parts.push_back(".");
+			is_fixed.push_back(0);
+			i++;
+		}else if(pattern[i + 1] == '*'){
+			parts.push_back(".*");
+			is_fixed.push_back(0);
+			i += 2;
+		}else{
+			parts.push_back(".");
+			is_fixed.push_back(0);
+			i++;
+		}
+	}else{ // alphabetic character. pattern[i] itself guaranteed to never be '*' due to problem constraints, '*' must be pattern[i + 1] the way
+		// I increment i
+		if(i == (int)pattern.length() - 1){
+			part += c;
+			i++;
+		}
+		else if(pattern[i + 1] == '*'){
+			if(part != ""){
+				parts.push_back(part);
+				is_fixed.push_back(1);
+				part = "";
+			}
+			parts.push_back(to_string(1, c) + "*");
+			is_fixed.push_back(0);
+			i += 2;
+		}
+		else{
+			part += c;
+			i++;
+		}
+	}
+}
+if(part != ""){
+	parts.push_back(part);
+	is_fixed.push_back(1);
+}
+
+bool is_match = regexMatch(s, parts, is_fixed, 0, 0);
+if(is_match) return true;
+else return false;

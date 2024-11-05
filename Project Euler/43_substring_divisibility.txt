@@ -1,0 +1,87 @@
+/* Project Euler #43
+Sub-string Divisibility
+*/
+
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+// the pragmas accelerate the code by allowing vectorized operations
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_set>
+#include <cmath>
+#include <ctime>
+using namespace std;
+
+// lvalue (left value, locator value) is a memory address, index vector assign to memory address position.
+//     lvalues can appear on left or right of assignment operator
+// rvalue (right valuek, recent value) is an expression that needs to be evaluated (memory lookup or arithmetic expression)
+//     rvalues can only appear on the right side of assignment operator. rvalues have no
+//     memory address. Disappear right after calculating if its value is not assigned to a variable.
+
+// global variables are declared outside of all scopes, even the main function scope!
+long TOTAL_SUM = 0; // I will make it a habit of mine to make
+vector<int> PRIMES = {2, 3, 5, 7, 11, 13, 17};
+// global variables in capital letters,
+// that is more visible
+
+bool is_special(vector<int> digits){ // in a separate scope, can reuse local variable names
+                                     // that are used in different function scopes. However, same function
+                                     // scope must consider loop and conditional statement scope variables!
+    for(int i = 1; i < 8; ++i){
+        int val = 100 * digits[i] + 10 * digits[i + 1] + digits[i + 2];
+        if(val % PRIMES[i - 1] != 0){
+            return false;
+        }
+    }
+    return true;
+}
+
+void all_permutations(vector<int> digits, vector<int> leftover){
+    if(leftover.size() == 0){
+        if(digits[0] == 0){ // leading digit cannot be 0
+            return;
+        }
+        if(is_special(digits) == true){ // vector digits is 10 digits long, so the number it represents
+                                        // can overflow an int. That is why num is initialized as long type
+            long num = 0;
+            for(int i = 0; i < digits.size(); ++i){
+                num += digits[i] * pow(10, digits.size() - 1 - i);
+            }
+            TOTAL_SUM += num;
+        }
+        return;
+    }else{
+        for(int i = 0; i < leftover.size(); ++i){ // unsure about this: Deeper scopes in checker use i variable!
+            vector<int> next_digits;
+            vector<int> next_leftover;
+            for(int j = 0; j < digits.size(); ++j){
+                next_digits.push_back(digits[j]);
+            }
+            next_digits.push_back(leftover[i]);
+            for(int j = 0; j < leftover.size(); ++j){
+                if(j != i){
+                    next_leftover.push_back(leftover[j]);
+                }
+            }
+            all_permutations(next_digits, next_leftover);
+        }
+    }
+    return; // I think this return statement is put in the correct place?
+}
+
+int main()
+{
+    clock_t start = clock();
+    vector<int> digits;
+    vector<int> options = {0,1,2,3,4,5,6,7,8,9};
+    all_permutations(digits, options);
+    
+    clock_t finish = clock();
+    
+    cout << "TOTAL_SUM: " << TOTAL_SUM << '\n';
+    cout << "elapsed time: " << static_cast<float>(finish - start) / CLOCKS_PER_SEC << " seconds" << '\n';
+
+    return 0;
+}

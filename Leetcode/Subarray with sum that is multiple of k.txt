@@ -1,0 +1,46 @@
+class Solution:
+    def checkSubarraySum(self, nums: List[int], k: int) -> bool:
+        
+        # THE TRICK IS TO MOD EVERYTHING, then
+        # HASHSET/HASHMAP O(1) lookup !!!!!!!!!!!!!!
+        # makes everything MUCH faster, this was one
+        # of the tricks on the 4th question of a recent
+        # Leetcode contest I participated in, also
+        # similar questions on Codesignal, etc.
+        # NUMBER OF RECORDINGS GOLDMAN SACHS OA
+        
+        # FOR THE WHOLE MINUTE DILEMMA QUESTION, COMPARING
+        # WITH ALL MULTIPLES OF 60 WAS OK DUE TO THE
+        # INPUT CONSTRAINTS, BUT FOR THIS QUESTION, UP
+        # TO 10^9, THERE WOULD BE TOOOOOOO MANY MULTIPLES
+        # OF SMALL NUMBERS !!!!!!!!!!!!! MUCH MORE THAN
+        # 10^7 runtime limit
+        if k == 1 and len(nums) > 1:
+            return True
+        
+        mod_di = {}
+        # for r in range(k): <<<<<<< this is TOOO slow, k can be MASSIVE, so TLE !!!!!!!
+        #     mod_di.update({r: None}) # simply initialize, no freq
+            
+        # if there are two locations in prefix array that differ
+        # in position by at least 2 where mod k value is the same,
+        # then return True
+        prefix = [nums[0] % k]
+        # print("prefix", prefix)
+        mod_di.update({nums[0] % k: 0})
+        for i in range(1, len(nums)):
+            prefix.append((prefix[-1] + nums[i]) % k)
+            if prefix[-1] == 0:
+                return True
+            if prefix[-1] not in mod_di:
+                mod_di.update({prefix[-1]: i}) # most recent index
+            elif i - mod_di[prefix[-1]] >= 2: # no key error will be invoked, since
+                                              # prefix[-1] is in mod_di, or condition
+                                              # in line 35 would have been entered
+                return True
+            # print("prefix", prefix)
+            
+        return False
+        
+        
+        

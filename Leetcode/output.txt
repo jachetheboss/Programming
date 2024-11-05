@@ -1,0 +1,106 @@
+ID      Rating     Title
+977     1129.95    Squares of a Sorted Array
+1137    1142.87    N-th Tribonacci Number
+2351    1155.45    First Letter to Appear Twice
+2278    1161.82    Percentage of Letter in String
+796     1167.07    Rotate String
+2341    1184.8     Maximum Number of Pairs in Array
+1122    1188.63    Relative Sort Array
+2319    1200.95    Check if Matrix Is X-Matrix
+2367    1203.07    Number of Arithmetic Triplets
+1160    1205.67    Find Words That Can Be Formed by Characters
+1848    1216.64    Minimum Distance to the Target Element
+1299    1219.43    Replace Elements with Greatest Element on Right Side
+2357    1225.39    Make Array Zero by Subtracting Equal Amounts
+2293    1241.08    Min Max Game
+2299    1241.54    Strong Password Checker II
+2347    1241.56    Best Poker Hand
+2309    1242.89    Greatest English Letter in Upper and Lower Case
+832     1243.1     Flipping an Image
+2399    1243.63    Check Distances Between Same Letters
+1518    1245.3     Water Bottles
+2279    1249.26    Maximum Bags With Full Capacity of Rocks
+2395    1249.84    Find Subarrays With Equal Sum
+2315    1250.9     Count Asterisks
+2283    1253.48    Check if Number Has Equal Digit Count and Digit Value
+2404    1259.34    Most Frequent Even Element
+2325    1268.03    Decode the Message
+2363    1270.67    Merge Similar Items
+2269    1279.79    Find the K-Beauty of a Number
+2303    1283.64    Calculate Amount Paid in Taxes
+2352    1286.38    Equal Row and Column Pairs
+872     1287.9     Leaf-Similar Trees
+2273    1294.58    Find Resultant Array After Removing Anagrams
+2287    1299.84    Rearrange Characters to Make Target String
+1338    1303.02    Reduce Array Size to The Half
+804     1307.57    Unique Morse Code Words
+2342    1308.96    Max Sum of a Pair With Equal Sum of Digits
+2348    1315.86    Number of Zero-Filled Subarrays
+1603    1324.18    Design Parking System
+2396    1328.55    Strictly Palindromic Number
+1347    1330.92    Minimum Number of Steps to Make Two Strings Anagram
+2373    1331.39    Largest Local Values in a Matrix
+2274    1332.62    Maximum Consecutive Floors Without Special Floors
+2270    1334.05    Number of Ways to Split Array
+859     1341.27    Buddy Strings
+1395    1343.63    Count Number of Teams
+2284    1346.96    Sender With Largest Word Count
+2390    1347.85    Removing Stars From a String
+1689    1355.38    Partitioning Into Minimum Number Of Deci-Binary Numbers
+2405    1355.4     Optimal Partition of String
+746     1358.36    Min Cost Climbing Stairs
+2379    1360.05    Minimum Recolors to Get K Consecutive Black Blocks
+1448    1360.22    Count Good Nodes in Binary Tree
+2335    1360.42    Minimum Amount of Time to Fill Cups
+1854    1370.42    Maximum Population Year
+2336    1375.04    Smallest Number in Infinite Set
+1185    1382.48    Day of the Week
+937     1387.37    Reorder Data in Log Files
+2389    1387.73    Longest Subsequence With Limited Sum
+957     1392.09    Prison Cells After N Days
+2383    1413.42    Minimum Hours of Training to Win a Competition
+890     1414.49    Find and Replace Pattern
+2294    1416.41    Partition Array Such That Maximum Difference Is K
+2374    1418.98    Node With Highest Edge Score
+2326    1421.73    Spiral Matrix IV
+791     1423.55    Custom Sort String
+2295    1445.14    Replace Elements in an Array
+2391    1455.85    Minimum Amount of Time to Collect Garbage
+2368    1476.91    Reachable Nodes With Restrictions
+2380    1481.1     Time Needed to Rearrange a Binary String
+2285    1496.25    Maximum Total Importance of Roads
+2358    1502.54    Maximum Number of Groups Entering a Competition
+869     1504.82    Reordered Power of 2
+1647    1509.54    Minimum Deletions to Make Character Frequencies Unique
+2349    1540.24    Design a Number Container System
+1329    1548.47    Sort the Matrix Diagonally
+2310    1558.95    Sum of Numbers With Units Digit K
+2316    1604.07    Count Unreachable Pairs of Nodes in an Undirected Graph
+2320    1607.7     Count Number of Ways to Place Houses
+1020    1615.48    Number of Enclaves
+2365    1622.77    Task Scheduler II
+916     1624.47    Word Subsets
+1332    1628.51    Remove Palindromic Subsequences
+2384    1636.47    Largest Palindromic Number
+2344    1640.9     Minimum Deletions to Make Array Divisible
+2275    1642.14    Largest Combination With Bitwise AND Greater Than Zero
+2343    1651.57    Query Kth Smallest Trimmed Number
+987     1675.96    Vertical Order Traversal of a Binary Tree
+2280    1680.87    Minimum Lines to Represent a Line Chart
+2337    1693.45    Move Pieces to Obtain a String
+792     1695.31    Number of Matching Subsequences
+2385    1711.49    Amount of Time for Binary Tree to Be Infected
+2406    1713.4     Divide Intervals Into Minimum Number of Groups
+2359    1714.99    Find Closest Node to Given Two Nodes
+2397    1718.83    Maximum Rows Covered by Columns
+2401    1749.54    Longest Nice Subarray
+2400    1751.12    Number of Ways to Reach a Position After Exactly k Steps
+2321    1790.57    Maximum Score Of Spliced Array
+2381    1793.3     Shifting Letters II
+2311    1839.92    Longest Binary Subsequence Less Than or Equal to K
+2332    1840.91    The Latest Time to Catch a Bus
+858     1880.74    Mirror Reflection
+823     1899.62    Binary Trees With Factors
+2296    1911.83    Design a Text Editor
+2354    2075.9     Number of Excellent Pairs
+2281    2621.12    Sum of Total Strength of Wizards

@@ -1,0 +1,59 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+#include <vector>
+#include <unordered_set>
+#include <unordered_map>
+
+using namespace std;
+
+int main()
+{ // calling a function a fuckton of times, especially recursively with a bunch of stack frames,
+  // creates a lot of overhead, slows down the runtime!
+    vector<int> vec; // contains int type! If you want to increase the size, then change to larger type!
+    for(int k = 0; k < 100; ++k){
+        vec.push_back(k * k * k * k);
+        cout << vec.back() << ' ';
+    }
+    unordered_map<int, vector<vector<int>>> diffs; // difference is key, indices of pairs with those diffs
+                                                   // is the value
+    for(int i = 0; i < vec.size(); ++i){
+        for(int j = 0; j < i; ++j){
+            if(diffs.count(vec[i] - vec[j]) == false){
+                diffs.insert({vec[i] - vec[j], {{vec[j], vec[i]}}}); // element at j is smaller than that at i
+            }else{
+                diffs[vec[i] - vec[j]].push_back({vec[j], vec[i]});
+            }
+        }
+    }
+    cout << "size of diffs: " << diffs.size() << '\n';
+    int unique_solutions = 0; // unique quadruplets a, b, c, d when in sorted order
+    int hello_count = 0;
+    vector<vector<int>> solution_vec;
+    for(int i = 0; i < vec.size(); ++i){
+        for(int j = 0; j <= i; ++j){
+            int pair_sum = vec[i] + vec[j];
+            if(diffs.count(pair_sum) == true){
+                hello_count += 1;
+                // cout <<"size of diffs[pair_sum] " << diffs[pair_sum].size() << '\n';
+                cout << vec[j] << ' ' << vec[i] << ' ' << diffs[pair_sum][0][0] << ' ' << diffs[pair_sum][0][0] << '\n';
+                for(int k = 0; k < diffs[pair_sum].size(); ++k){
+                    if(diffs[pair_sum][k][0] >= vec[i]){
+                        solution_vec.push_back({vec[j], vec[i], diffs[pair_sum][k][0], diffs[pair_sum][k][1]});
+                        unique_solutions += 1;
+                    }
+                }
+            }
+        }
+    }
+    cout << "unique_solutions: " << unique_solutions << '\n';
+    cout << "hello_count: " << hello_count << '\n';
+
+    return 0;
+}

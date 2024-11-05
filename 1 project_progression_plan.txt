@@ -1,0 +1,42 @@
+finish all the projects you choked on the past two years!
+
+Pygame sudoku
+Minesweeper
+AVL tree
+Memory manager
+File system
+
+MIT OpenCourseWare projects
+starting from programming I, II, DSA, OS, Comp Arch, ML, AI,
+etc. DO A BUNCH OF PROJECTS!
+
+Embark on tennis computer vision project, statistics, playstyle,
+shot quality, winning % betting prediction, etc.,
+2 eventual goals: build a functioning tennis robot, choose
+a player to play against, pro, college, or random, choose
+UTR to play against, allow the robot to learn how to play like
+anybody once given 1 hour of sample footage.
+
+Ability to play with any racquet, any balls, quick adjustment
+algorithm. Adjust based on temperature, humidity, court speed,
+altitude, wind, old balls, shit racquet, dead strings, shit grip,
+size 3 grip, size 5 grip, etc. SO MANY VARIABLES!
+
+***Bonus*** Give audio grunt effects to robot, instead of wheels
+or treads, give it human bipedal running ability.
+***Bonus*** Give robot the ability to coach, analyze your play
+in real-time (feedback e.g. "you're hitting too shallow, play
+deeper" "good ball" "excellent ball" "put more spin" "too early" 
+"too late" "hitting down the middle too much" "don't drop the
+racquet so much" "don't slap" **add in jokes** "you're shit" 
+"nice shot babe")
+***Bonus*** all-in-one robot, include built-in speaker for playing
+music, instead of lugging a separate JBL to each practice.
+***Bonus*** allow drill feed ability, Spanish death drill, bowtie
+drill, crosscourts, DTL, overhead feeds, baseline-to-volley drill,
+***Bonus*** interactive touchscreen display, handheld remote,
+wifi-connected keyboard, figure out the I/O of the robot!
+***Bonus*** make robot foldable to carry like a suitcase, like
+Iron Man 2
+***Bonus*** make robot walkable on its own, don't have to carry
+or push it

@@ -1,0 +1,103 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <algorithm>
+#include <ctime>
+#include <cmath>
+using namespace std;
+
+int main(){
+    int N = 0; // don't use temp variable name, might want to use variable name "temp"
+    int K = 0; // later on when doing element swapping in vector/array or when doing BFS routine
+    int R = 0;
+    cin >> N;
+    cin >> K;
+    cin >> R;
+    
+    vector<int> nucleotides;
+    for(int count = 0; count < N; ++count){
+        int nucleotide = 0;
+        cin >> nucleotide;
+        nucleotides.push_back(nucleotide);
+    }
+    vector<int> thres (K, 0);
+    for(int count = 0; count < R; ++count){
+        int B = 0;
+        int Q = 0;
+        cin >> B;
+        cin >> Q;
+        thres[B] = Q;
+    }
+    
+    // cout << "\n\n";
+    // for(int i = 0; i < nucleotides.size(); ++i){
+    //     cout << nucleotides[i] << ' ';
+    // }
+    // cout << "\n\n";
+    // for(int i = 0; i < thres.size(); ++i){
+    //     cout << thres[i] << ' ';
+    // }
+    // cout << "\n\n";
+    
+    unordered_map<int, int> freq;
+    unordered_map<int, int>::iterator it;
+    for(int nuc = 0; nuc < K; ++nuc){
+        freq.insert({nuc, 0});
+    }
+    // cout << "freq: " << '\n';
+    // for(it = freq.begin(); it != freq.end(); ++it){
+    //     cout << it->first << ' ' << it ->second << '\n';
+    // }
+    // cout << '\n';
+    
+    
+    int nuc_satisfied = 0; // nuc_satisfied should be R, and then length can be compared
+                           // to shortest_length. THIS IS A ROLLING COUNTER AUXILIARY VARIABLE USED IN CONJUNCTION
+                           // WITH R !!!!!!!
+    int shortest_length = std::numeric_limits<int>::max(); // output is shortest_length
+    // cout << "shortest_length: " << shortest_length << '\n';
+    int i = 0;
+    int j = 0;
+    while(i < N && j < N){ // i is right pointer, j is left pointer. Be careful with && logical AND and
+                                                                  // & bitwise AND difference !!!!!!!
+        if(thres[nucleotides[i]] == 0){ // filler nucleotide, not a part of the freq requirements
+            i += 1;
+            continue;
+        }
+        // else
+        freq[nucleotides[i]] += 1;
+        if(freq[nucleotides[i]] == thres[nucleotides[i]]){
+            nuc_satisfied += 1;
+            while(nuc_satisfied == R){ // instead of having a "switch mode" with a "i increment" and "j increment"
+                                       // mode, this inner while loop is fine
+                if(i - j + 1 < shortest_length){
+                    shortest_length = i - j + 1;
+                }
+                if(thres[nucleotides[j]] != 0){
+                    freq[nucleotides[j]] -= 1;
+                    if(freq[nucleotides[j]] < thres[nucleotides[j]]){
+                        nuc_satisfied -= 1;
+                    }
+                }
+                j += 1; // in my implementation, the i index increments one outer loop iteration at a time,
+                        // but j index may increment multiple times in one iteration of the outer while loop
+            }
+            i += 1;
+        }
+        else{
+            i += 1;
+        }
+        // cout << "nuc_satisfied: " << nuc_satisfied << '\n';
+        // cout << "i: " << i << ' ' << "j: " << j << '\n';
+    }
+    if(shortest_length == std::numeric_limits<int>::max()){
+        cout << "impossible" << '\n';
+    }
+    else{
+        cout << shortest_length << '\n';
+    }
+    
+    
+    return 0; // alternative to returning 0? maybe exit success is more descriptive
+}

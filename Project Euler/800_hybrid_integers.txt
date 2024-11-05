@@ -1,0 +1,89 @@
+
+#include <iostream>
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main()
+{
+    // binary search
+    // log(xy) = log(x) + log(y)
+    // log(p^q * q^p) = q(log p) + p(log q)
+    double thres = 1.0 * 800800 * log(800800);
+    
+    // for(int p = 2)
+    
+    int lo = 0;
+    int hi = 1000000000;
+    int mid = (lo + hi) / 2;
+    int max_exp = -1;
+    while(true){
+        double val_mid = 1.0 * mid * log(2) + 1.0 * 2 * log(mid);
+        double val_mid_1 = 1.0 * (mid + 1) * log(2) + 1.0 * 2 * log(mid + 1);
+        if(val_mid < thres and thres < val_mid_1){
+            max_exp = mid;
+            break;
+        }
+        else if(val_mid >= thres) hi = mid;
+        else if(thres >= val_mid_1) lo = mid + 1;
+        mid = (lo + hi) / 2;
+    }
+    cout << "max_exp: " << max_exp << endl;
+    // sieve for all primes <= 20 million
+    
+    int sieve_sz = 20000000;
+    vector<int> sieve (sieve_sz, 1);
+    int bound = (int)floor(sqrt(sieve_sz));
+    sieve[0] = 0;
+    sieve[1] = 0;
+    for(int i = 2; i <= bound; ++i){
+        if(sieve[i] == 0) continue;
+        for(int j = i * i; j < sieve.size(); j += i){
+            sieve[j] = 0;
+        }
+    }
+    vector<int> primes;
+    for(int i = 2; i < sieve.size(); ++i){
+        if(sieve[i] == 1) primes.push_back(i);
+    }
+    
+    cout << "primes.size() " << primes.size() << endl;
+    
+    long long ans = 0;
+    int L = 0;
+    for(int p = 2; p < 800800; ++p){
+        if(sieve[p] == 0) continue; // p and q must both be prime! 
+        // lower bound
+        if(2.0 * p * log(p) > thres) break;
+        
+        int lo = 0;
+        int hi = (int)primes.size() - 1;
+        int mid = (lo + hi) / 2;
+        int R = -1;
+        while(true){
+            double val_mid = 1.0 * primes[mid] * log(p) + 1.0 * p * log(primes[mid]);
+            double val_mid_1 = 1.0 * primes[mid + 1] * log(p) + 1.0 * p * log(primes[mid + 1]);
+            
+            // cout << "val_mid: " << val_mid << endl;
+            // cout << "val_mid_1: " << val_mid_1 << endl;
+            // cout << "thres: " << thres << endl;
+            // cout << "mid: " << mid << endl;
+            // cout << endl;
+            
+            if(val_mid < thres and thres < val_mid_1){
+                R = mid;
+                break;
+            }
+            else if(val_mid >= thres) hi = mid;
+            else if(thres >= val_mid_1) lo = mid + 1;
+            mid = (lo + hi) / 2;
+        }
+        int incr = R - L;
+        ans += incr;
+        
+        L++;
+    }
+    cout << "ans: " << ans << endl;
+    
+    return 0;
+}

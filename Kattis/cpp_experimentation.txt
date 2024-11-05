@@ -1,0 +1,75 @@
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+
+#include <vector>
+#include <unordered_set>
+#include <unordered_map>
+#include <cmath>
+#include <algorithm>
+#include <ctime>
+#include <sstream>
+#include <iostream>
+using namespace std;
+
+template <typename T>
+std::string to_string_with_precision(const T a_value, const int n = 6)
+{
+    std::ostringstream out;
+    out.precision(n);
+    out << std::fixed << a_value;
+    return out.str();
+}
+
+int main(){
+    
+    clock_t start = clock();
+    unordered_map<int, unordered_set<int>> hm; // contains numerator keys and denominator set values
+                                               // of simplified slopes
+    vector<double long> unique_slopes;
+    for(int i = 1; i < 1501; i++){
+        for(int j = 1; j < 100001; j++){
+            int GCD = __gcd(i, j);
+            int numer = i / GCD;
+            int denom = j / GCD;
+            if(hm.count(numer) == false){
+                unordered_set<int> empty_set;
+                empty_set.insert(denom);
+                hm.insert({numer, empty_set});
+                unique_slopes.push_back(1.0 * numer / denom);
+            }
+            else if(hm[numer].count(denom) == false){
+                    hm[numer].insert(denom);
+                    unique_slopes.push_back(1.0 * numer / denom);
+            }
+        }
+    }
+    
+    // cout << "double long " << std::numeric_limits<double long>::max() << '\n';
+    // cout << "long " << std::numeric_limits<long>::max() << '\n';
+    // cout << "double " << std::numeric_limits<double>::max() << '\n';
+    // cout << "int " << std::numeric_limits<int>::max() << '\n';
+    // cout << "long long int " << std::numeric_limits<long long int>::max() << '\n';
+    // cout << "float " << std::numeric_limits<float>::max() << '\n';
+    // cout << "clock_t " << std::numeric_limits<clock_t>::max() << '\n';
+    // cout << "size_t " << std::numeric_limits<size_t>::max() << '\n';
+    // cout << '\n';
+    
+    
+    sort(unique_slopes.begin(), unique_slopes.end());
+    double long min_diff = std::numeric_limits<double long>::max();
+    string string_rep = "";
+    for(int i = 0; i < unique_slopes.size() - 1; i++){
+        double long diff = unique_slopes[i + 1] - unique_slopes[i];
+        if(diff < min_diff){
+            min_diff = diff;
+            string_rep = to_string_with_precision(min_diff, 42);
+        }
+    }
+    cout << "min diff string repr: " << string_rep << '\n';
+    
+    
+    clock_t finish = clock();
+    cout << "elapsed time: " << 1.0 * (static_cast<int>(finish - start)) / CLOCKS_PER_SEC << " seconds" << '\n';
+    
+    return 0;
+}

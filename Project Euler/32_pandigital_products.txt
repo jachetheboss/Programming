@@ -1,0 +1,90 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_set>
+#include <cmath>
+#include <ctime>
+using namespace std;
+
+// global variables are declared outside of all scopes, even the main function scope!
+long total_sum = 0;
+int total_permutations = 0;
+unordered_set<int> hs;
+
+int checker(vector<int> digits){ // returning int type should be enough, largest product after putting in + and =
+                                 // signs is 9876543
+    int product_sum = 0;
+    for(int i = 0; i < 7; ++i){ // + sign
+        for(int j = i + 1; j < 8; ++j){ // = sign
+            int multiplicand = 0;
+            int multiplier = 0;
+            int product = 0;
+            for(int k = 0; k <= i; ++k){
+                multiplicand += digits[k] * pow(10, i - k);
+            }
+            for(int k = i + 1; k <= j; ++k){
+                multiplier += digits[k] * pow(10, j - k);
+            }
+            for(int k = j + 1; k <= digits.size() - 1; ++k){
+                product += digits[k] * pow(10, digits.size() - 1 - k);
+            }
+            if((multiplicand * multiplier == product) && hs.count(product) == false){
+                product_sum += product;
+                hs.insert(product);
+            }
+        }
+    }
+    return product_sum;
+}
+
+void all_permutations(vector<int> digits, vector<int> leftover){
+    if(leftover.size() == 0){
+        total_permutations += 1;
+        int product_sum = checker(digits);
+        total_sum += product_sum;
+        return;
+    }else{
+        for(int i = 0; i < leftover.size(); ++i){ // unsure about this: Deeper scopes in checker use i variable!
+            vector<int> next_digits;
+            vector<int> next_leftover;
+            for(int j = 0; j < digits.size(); ++j){
+                next_digits.push_back(digits[j]);
+            }
+            next_digits.push_back(leftover[i]);
+            for(int j = 0; j < leftover.size(); ++j){
+                if(j != i){
+                    next_leftover.push_back(leftover[j]);
+                }
+            }
+            all_permutations(next_digits, next_leftover);
+        }
+    }
+    return; // I think this return statement is put in the correct place?
+}
+
+int main()
+{
+    clock_t start = clock();
+    vector<int> digits;
+    vector<int> options = {1,2,3,4,5,6,7,8,9};
+    
+    all_permutations(digits, options);
+    clock_t finish = clock();
+    
+    cout << "total_sum: " << total_sum << '\n';
+    cout << "total_permutations: " << total_permutations << '\n';
+    cout << "elapsed time: " << static_cast<float>(finish - start) / CLOCKS_PER_SEC << " seconds" << '\n';
+
+    return 0;
+}

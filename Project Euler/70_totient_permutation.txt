@@ -1,0 +1,147 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <cmath>
+#include <ctime>
+#include <algorithm>
+using namespace std;
+
+bool are_anagrams(int a, int b){ // extract the digits
+    vector<int> freq_a (10, 0);
+    vector<int> freq_b (10, 0);
+    while(a != 0){
+        freq_a[a % 10] += 1;
+        a /= 10;
+    }while(b != 0){
+        freq_b[b % 10] += 1;
+        b /= 10;
+    }if(freq_a == freq_b){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+int sum(vector<int>& builder){
+    int output = 0;
+    for(int i = 0; i < builder.size(); ++i){
+        output += builder[i];
+    }
+    return output;
+}
+void increment(vector<int>& builder){
+    int i = builder.size() - 1;
+    while(i >= 0){
+        if(builder[i] == 0){
+            builder[i] = 1;
+            break;
+        }else{
+            builder[i] = 0;
+            i -= 1;
+        }
+    }
+    return;
+}
+// TRY TO FIND A BETTER ALGORITHM TO CALCULATE THE TOTIENT OF A NUMBER!
+// builder algorithm is good, but can I do better? backtracking?
+int calculate_totient(vector<int>& distinct, int k){ // distinct factors
+// double calculate_totient()
+    vector<int> builder (distinct.size(), 0);
+    int coprime = 0;
+    int combos = pow(2, distinct.size());
+    for(int cnt = 0; cnt < combos; ++cnt){
+        bool is_neg = false;
+        if(sum(builder) % 2 != 0){ // even number of bits
+            is_neg = true;
+        }
+        int divisor = 1;
+        for(int i = 0; i < builder.size(); ++i){
+            if(builder[i] == 1){
+                divisor *= distinct[i];
+            }
+        }
+        if(is_neg){
+            divisor = 0 - divisor;
+        }
+        coprime += k / divisor;
+        increment(builder);
+    }
+    // return 1.0 * k / coprime;
+    return coprime;
+}
+int main() // IMPROVEMENT COULD BE TO CHECK ALL PRIMES from largest prime to smallest, then check all 
+          // semiprimes, etc.
+{
+    clock_t t1 = clock();
+    
+    int range = 0;
+    cout << "Enter in max range: ";
+    cin >> range;
+    int limit = static_cast<int>(floor(sqrt(range)));
+    vector<int> primes;
+    vector<bool> sieve (range + 1, true);
+    sieve[0] = false; // just in case I forget to account that 0 and 1 are not prime
+    sieve[1] = false;
+    for(int k = 2; k <= limit; ++k){
+        if(sieve[k] == false){
+            continue;
+        }
+        primes.push_back(k);
+        for(int j = k * k; j < sieve.size(); j += k){
+            sieve[j] = false;
+        }
+    }
+    for(int k = limit + 1; k < sieve.size(); ++k){
+        if(sieve[k] == true){
+            primes.push_back(k);
+        }
+    }
+    cout << "primes.size() " << primes.size() << '\n';
+    vector<vector<int>> factors (range + 1, vector<int>());
+    for(int i = 0; i < primes.size(); ++i){
+        int p = primes[i]; // p for prime
+        for(int k = p; k < factors.size(); k += p){
+            factors[k].push_back(p);
+        }
+    }
+    // for(int k = 2; k < 100; ++k){
+    //     cout << k << '\n';
+    //     for(int j = 0; j < factors[k].size(); ++j){
+    //         cout << factors[k][j] << ' ';
+    //     } cout << "\n\n";
+    // }
+    
+    double min_ratio = std::numeric_limits<double>::max();
+    int ans = 0;
+    long long total_fractions = 0;
+    for(int k = 2; k < factors.size(); ++k){
+        int totient = calculate_totient(factors[k], k); // number of coprime
+        total_fractions += totient;
+        if(are_anagrams(totient, k) == false){
+            continue;
+        }
+        double ratio = 1.0 * k / totient;
+        if(ratio < min_ratio){
+            min_ratio = ratio;
+            ans = k;
+        }
+    }
+    cout << "total_fractions: " << total_fractions << '\n';
+    
+    clock_t t2 = clock();
+    double seconds = static_cast<double>(t2 - t1) / CLOCKS_PER_SEC;
+    cout << "Minimum ratio under " + to_string(range) + " is: " << min_ratio << '\n';
+    cout << "Answer is: " << ans << '\n';
+    cout << "Totient of answer is: " << calculate_totient(factors[ans], ans) << '\n';
+    cout << "Runtime: " << seconds << " seconds" << '\n';
+    
+    return 0;
+}

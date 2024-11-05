@@ -1,0 +1,109 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_set>
+#include <cmath>
+#include <ctime>
+using namespace std;
+
+// global variables are declared outside of all scopes, even the main function scope!
+int max_pandigital_prime = 0; // if cout max_pandigital_prime prints 0, then algorithm is wrong!
+int total_permutations = 0;
+
+bool is_prime(int num){ // true means prime, false means composite
+    if(num == 1){ // 1 is not a prime number
+        return false;
+    }
+    int limit = static_cast<int>(floor(sqrt(num)));
+    for(int k = 2; k < limit + 1; ++k){
+        if(num % k == 0){
+            return false; // if evenly divisible by a k within sqrt(num), then num is composite
+        }
+    }
+    return true; // if not divisible by any k as described above, then num is prime
+}
+
+void all_permutations(vector<int> digits, vector<int> leftover){
+    if(leftover.size() == 0){
+        total_permutations += 1; // global variable
+        int num = 0;
+        for(int i = 0; i < digits.size(); ++i){
+            num += digits[i] * pow(10, digits.size() - 1 - i);
+        }
+        if(is_prime(num) == true){
+            if(num > max_pandigital_prime){
+                max_pandigital_prime = num;
+            }
+        }
+        return;
+    }else{
+        for(int i = 0; i < leftover.size(); ++i){ // unsure about this: Deeper scopes in checker use i variable!
+            vector<int> next_digits;
+            vector<int> next_leftover;
+            for(int j = 0; j < digits.size(); ++j){
+                next_digits.push_back(digits[j]);
+            }
+            next_digits.push_back(leftover[i]);
+            for(int j = 0; j < leftover.size(); ++j){
+                if(j != i){
+                    next_leftover.push_back(leftover[j]);
+                }
+            }
+            all_permutations(next_digits, next_leftover);
+        }
+    }
+    return; // I think this return statement is put in the correct place?
+}
+
+int main()
+{
+    clock_t start = clock();
+    vector<int> digits;
+    vector<int> options;
+    
+    for(int d = 1; d < 10; ++d){
+        options.push_back(d);
+        all_permutations(digits, options);
+    }
+    clock_t finish = clock();
+    
+    cout << "total_permutations: " << total_permutations << '\n';
+    cout << "max_pandigital_prime: " << max_pandigital_prime << '\n';
+    cout << "elapsed time: " << static_cast<float>(finish - start) / CLOCKS_PER_SEC << " seconds" << '\n';
+
+    return 0;
+}
+
+/* Python ideas
+####### decide whether to calculate primes first using combined
+####### prime checker and Eratosthenes sieve, or generate all
+####### pandigitals first and then check for primality
+
+####### also keep in mind, some pandigitals (i.e. ALL of length
+####### 9, containing digits from 1-9 one time each), are not
+####### prime due to the sum of their digits being a multiple
+####### of three, so all pandigitals of length 8 and 9 are not
+####### prime.
+
+for n in reversed(range(1, 10)):
+    memory = [0] * (n + 1)
+    builder = [0] * (n + 1)
+    digits = [0] * (n + 1)
+    for i in range(len(digits)):
+        digits[i] = len(digits) - 1 - i
+    print("digits", digits)
+    if sum(digits) % 3 == 0:
+        continue
+    ####### if sum is multiple of 3, divisible by 3, not prime
+*/

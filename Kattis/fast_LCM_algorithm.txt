@@ -1,0 +1,63 @@
+import math
+import time
+
+def main():
+    start = time.perf_counter()
+    LCM = 1
+    for k in range(2, 10**5 + 1):
+        LCM = math.lcm(LCM, k)
+    finish = time.perf_counter()
+    
+    print("elapsed:", finish - start)
+    string_LCM = str(LCM)
+    print("len(string_LCM)", len(string_LCM))
+    
+    
+    start = time.perf_counter()
+    bool_field = [True for _ in range(10**5 + 1)]
+    bool_field[0] = False
+    bool_field[1] = False
+    for k in range(2, 10**5 // 2 + 1): ####### in C++, make a "limit" auxiliary variable as value to compare to for a
+                                       ####### for loop condition. Otherwise, the expression will have to be evaluated
+                                       ####### EVERY SINGLE ITERATION of the for loop
+        if bool_field[k] is False:
+            continue
+        for c in range(2, 10**5 // k + 1): ####### instead of doing a bunch of multiplications, use a more "memoized"
+                                       ####### algorithm, adding during each for loop. The multiplications are wasteful.
+            bool_field[c * k] = False
+    num_primes = 0
+    for x in bool_field:
+        if x is True:
+            num_primes += 1
+    print("num primes up to 100,000:", num_primes)
+    
+    fast_LCM = 1
+    for k in range(len(bool_field)):
+        if bool_field[k] is True:
+            fast_LCM *= k ** int(math.floor(math.log(10**5, k)))
+            
+    finish = time.perf_counter()
+    print("elapsed:", finish - start)
+    string_fast_LCM = str(fast_LCM)
+    print("len(string_fast_LCM)", len(string_fast_LCM))
+    
+    if fast_LCM == LCM:
+        print("The LCM values are the same!")
+    else:
+        print("The LCM values are different! Double check your logic!")
+
+if __name__ == "__main__":
+    main()
+    
+
+
+
+
+
+
+
+
+
+
+
+

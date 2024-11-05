@@ -1,0 +1,76 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+#include <vector>
+#include <string>
+#include <cmath>
+#include <unordered_set>
+
+using namespace std;
+vector<int> generate_factorials(){ // generates factorials of digits 0-9
+    vector<int> factorials (10, 0);
+    factorials[0] = 1;
+    int prod = 1;
+    for(int k = 1; k < factorials.size(); ++k){
+        prod *= k;
+        factorials[k] = prod;
+    }
+    return factorials;
+}
+int iterate(int num, vector<int>& factorials){
+    vector<int> digits; // LSP least significant place on LEFT, easier indexing
+    while(num != 0){
+        digits.push_back(num % 10);
+        num /= 10;
+    }
+    // int multiplier = 1;
+    int new_num = 0;
+    for(int i = 0; i < digits.size(); ++i){
+        new_num += factorials[digits[i]];
+        // multiplier *= 10;
+    }
+    return new_num;
+}
+int main()
+{
+    vector<int> factorials = generate_factorials(); // memoize to prevent repeatedly
+                                                   // re-calculating factorials of digits
+    int ans = 0;
+    int max_streak = 0;
+    for(int k = 1; k <= 1000000; ++k){
+        unordered_set<int> hs; // used to detect cycle, no need for long type,
+                              // sum of factorials of digits should never exceed 2,147,483,647
+        hs.insert(k);
+        int streak = 1;
+        int num = k;
+        // CAN USE MEMOIZATION TO MAKE THIS EVEN FASTER, IF I COME ACROSS A CERTAIN
+        // NUMBER THAT I HAVE SEEN BEFORE, THEN I DO NOT KEEP CALCULATING,
+        // MAINTAIN A HASHTABLE OR VECTOR OF SIZE 10^6 + 1 to store previously
+        // calculated cycle lengths
+        while(true){
+            num = iterate(num, factorials);
+            if(hs.count(num) == true){
+                break;
+            }else{
+                hs.insert(num);
+                streak += 1;
+            }
+        }if(streak == 60){
+            ans += 1;
+        }if(streak > max_streak){
+            max_streak = streak;
+        }if(k % 10000 == 0){
+            cout << "max_streak: " << max_streak << '\n';
+        }
+    }
+    cout << "ans: " << ans << '\n';
+    // cout << "max_streak: " << max_streak << '\n';
+
+    return 0;
+}

@@ -1,0 +1,68 @@
+
+
+// make a new hashset, put all words in new hashset
+
+
+int output = 0;
+
+for(int x = 0; x < N; x++){
+    for(int y = 0; y < N; y++){
+        
+        String str = alpha[x][y];
+        String temp = str;
+
+        if(hashset.contains(str)){
+            output += 1;
+        }
+    
+        // above vertical
+        for(int i = x - 1; i >= 0; i--){
+            temp += alpha[i][j];
+            if(hashset.contains(temp)){
+                output += 1;
+            }
+        }
+
+        temp = str;
+       
+        // below vertical
+        for(int i = x + 1; i < N; i++){
+            temp += alpha[i][j];
+            if(hashset.contains(temp)){
+                output += 1;
+            }
+        }
+        
+        temp = str;
+
+        // left horizontal
+        for(int j = y - 1; j >= 0; j--){
+            temp += alpha[i][j];
+            if(hashset.contains(temp)){
+                output += 1;
+            }
+        }
+        
+        temp = str;
+
+        // right horizontal
+        for(int j = y + 1; j < N; j++){
+            temp += alpha[i][j];
+            if(hashset.contains(temp)){
+                output += 1;
+            }
+        }
+        
+        temp = str;
+
+        // below right diagonal
+        for(int i = x + 1, int j = y + 1; i < N & j < N; i++, j++){
+            temp += alpha[i][j];
+            if(hashset.contains(temp)){
+                output += 1;
+            }
+        }
+        
+        temp = str;
+            
+        

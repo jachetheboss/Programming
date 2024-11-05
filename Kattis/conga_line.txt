@@ -1,0 +1,162 @@
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma") // comment this out to check for runtime differences
+
+
+/////// ALSO TRY USING scanf and printf FASTER INPUT AND OUTPUT, FASTER THAN cin and cout, maybe
+/////// THAT IS WHAT IS HOLDING BACK MY IMPLEMENTATION !!!!!!!
+
+
+#include <ctime>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+using namespace std;
+
+int main(){ // THE CORRECT ALGORITHM FOR FULL POINTS SHOULD PROBABLY BE A BINARY TREE
+
+    // vector<int> test_vec = {1, 2, 3, 4, 5};
+    // test_vec.insert(test_vec.begin() + 6, 6);
+    // for(int i = 0; i < test_vec.size() + 1; i++){
+    //     cout << test_vec[i] << ' ';
+    // }
+    
+    
+    // for(int i = 0; i <= 21474836; i++){
+    //     cout << clock() << '\n';
+    // }
+    
+    
+    
+    string a = "";
+    cin >> a;
+    int N = atoi(a.c_str());
+    cin >> a;
+    int Q = atoi(a.c_str());
+    unordered_map<string, string> hm; // couples
+    unordered_map<string, int> locations; // indices of the people
+    unordered_map<string, string>::iterator it;
+    int location = 0;
+    vector<string> conga_line;
+    for(int i = 0; i < N; i++){
+        string partner1 = "";
+        string partner2 = "";
+        cin >> partner1;
+        cin >> partner2;
+        hm.insert({partner1, partner2});
+        hm.insert({partner2, partner1});
+        conga_line.push_back(partner1);
+        conga_line.push_back(partner2);
+        locations.insert({partner1, location});
+        locations.insert({partner2, location + 1});
+        location += 2;
+    }
+    string instructions = "";
+    cin >> instructions;
+        
+        // cout << "couples:" << '\n';
+        // for(it = hm.begin(); it != hm.end(); it++){
+        //     cout << it->first << ' ' << it->second << '\n';
+        //     cout << it->first << ' ' << locations[it->first] << '\n';
+        // }
+        // cout << "instructions: " << '\n';
+        // cout << instructions << '\n';
+        
+        
+        // maybe make new unordered_map that hashes an int value to a string name? Could be faster
+        // overall, in the long run when conga_line is being mutated, deleting elements and appending and such.
+        // Giving an int ID to each person should benefit in runtime! Only issue is that the "P" print out query
+        // will suffer, since a hashmap lookup will have to be done to see what person the ID hashes to, but
+        // only up to 10^6 queries, so not a big deal in C++ especially!
+        
+        
+    vector<clock_t> runtimes;
+    for(int count = 0; count < 10000; count++){ // run the algorithm 10 thousand times with optimizations,
+                                                // and without optimizations to see the runtime differences
+        
+        clock_t start = clock();
+        int mic_loc = 0; // index where microphone is currently at, starts at 0 according to directions
+        for(int i = 0; i < instructions.length(); i++){
+            if(instructions[i] == 'F'){
+                mic_loc -= 1;
+            }
+            else if(instructions[i] == 'B'){
+                mic_loc += 1;
+            }
+            else if(instructions[i] == 'R'){
+                if(mic_loc == conga_line.size() - 1){
+                    mic_loc = 0;
+                }
+                else{
+                    // all indices of people that moved must be updated in the hashmap!
+                    string person = conga_line[mic_loc];
+                    conga_line.erase(conga_line.begin() + mic_loc, conga_line.begin() + mic_loc + 1);
+                    for(int j = mic_loc; j < conga_line.size(); j++){
+                        locations[conga_line[j]] -= 1;
+                    }
+                    conga_line.push_back(person);
+                    locations[person] = conga_line.size() - 1;
+                }
+            }
+            else if(instructions[i] == 'C'){ // could be some buggy fucking logic
+                if(locations[hm[conga_line[mic_loc]]] < mic_loc){
+                    string person = conga_line[mic_loc];
+                    conga_line.erase(conga_line.begin() + mic_loc, conga_line.begin() + mic_loc + 1);
+                    for(int j = locations[hm[conga_line[mic_loc]]] + 1; j < mic_loc; j++){
+                        locations[conga_line[j]] += 1;
+                    }
+                    conga_line.insert(conga_line.begin() + locations[hm[conga_line[mic_loc]]] + 1, person);
+                    locations[person] = locations[hm[conga_line[mic_loc]]] + 1;
+                    if(mic_loc == conga_line.size() - 1){
+                        mic_loc = 0;
+                    }
+                    else{
+                        mic_loc -= 1;
+                    }
+                }
+                else{ // locations[hm[conga_line[mic_loc]]] > mic_loc CANNOT BE SAME INDEX! WOULD BE SUPERPOSITION!
+                    string person = conga_line[mic_loc];
+                    for(int j = mic_loc + 1; j < locations[hm[person]] + 1; j++){
+                        locations[conga_line[j]] -= 1;
+                    }
+                    conga_line.erase(conga_line.begin() + mic_loc, conga_line.begin() + mic_loc + 1);
+                    conga_line.insert(conga_line.begin() + locations[hm[person]] + 1, person);
+                }
+            }
+            else if(instructions[i] == 'P'){ // run the program WITH AND WITHOUT "P" query cout, since
+                                             // it could be slow? But only printing one name at a time,
+                                             // whereas the vector mutating calls take up to O(N) time,
+                                             // but printing out a name is O(1) time, each name is only
+                                             // up to seven letters long
+                cout << hm[conga_line[mic_loc]] << '\n';
+            }
+        }
+        cout << '\n';
+        for(int i = 0; i < conga_line.size(); i++){ // IS KATTIS VERY PICKY? MAY NOT ACCEPT SOLUTION WITH AN
+                                                    // EXTRA NEWLINE CHARACTER AFTER THE FINAL LINE OF OUTPUT!
+            cout << conga_line[i] << '\n';
+        }
+        
+        clock_t finish = clock();
+        clock_t elapsed = finish - start;
+        runtimes.push_back(elapsed);
+        // could also try casting clock_t to int using -------> static_cast<int>(elapsed)
+    }
+    // cout << "\n\n";
+    // cout << "elapsed: " << finish - start;
+    
+    // remember, runtimes contains clock_t types!
+    float avg = float(runtimes[0]); // works just fine, but should probably use static_cast<float>(argument)
+                                    // since it is more visible and clear for a human reader
+    float count = 2;
+    for(int i = 1; i < runtimes.size(); i++){
+        float coef1 = (count - 1) / count;
+        float coef2 = 1.0 / count;
+        avg = coef1 * avg + coef2 * static_cast<float>(runtimes[i]);
+        count += 1;
+    }
+    cout << "average number of clock cycles: " << avg;
+    
+    
+    return 0;
+}

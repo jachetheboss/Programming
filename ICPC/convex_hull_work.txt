@@ -1,0 +1,21 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+int main(){
+    // use convex hull algorithm, also solve the farmer fence question on LeetCode, Hard question
+    
+    // include <algorithm> to sort points, then use monotonic stack to make the edges
+    // with convex slopes. "Top half" as well as "bottom half," and deal with cases where points
+    // have the same x-axis. Improve computational geometry ability! Also solve the Swiss cheese question
+    // in Kattis
+    
+    // convex hull degenerate case where convex hull is just a 1D line, not a 2D shape
+    
+    
+    
+    
+    return 0;
+}

@@ -1,0 +1,66 @@
+def solution(field, figure):
+    
+    m = len(field)
+    n = len(field[0])
+    di = {} # which cells (columns) in each row are empty
+    for i in range(m):
+        di.update({i: set()})
+        for j in range(n):
+            if field[i][j] == 0:
+                di[i].add(j)
+    
+    # algorithm could drop it one at a time, and then check
+    # to see if it touches anything, or could just figure out
+    # immediately, using an O(1) clean logic calculation, which
+    # column of the placed blocks beneath stops the falling
+    # piece, or maybe multiple columns stop it (piece has
+    # multiple columns flat, ground has multiple columns flat)
+    
+    # once figure spawns at the top of the field, there cannot
+    # be a placed block that is located in the same cell
+    # as a solid cell in the figure, i.e. the figure cannot
+    # spawn with a portion inside the ground
+    
+    height = [None, None, None]
+    for a in range(3):
+        for b in range(3):
+            if figure[a][b] == 1:
+                height[b] = a
+    
+    output = -1
+    for j in range(n - 2):
+        # spawn_in_ground = False
+        # for a in range(3):
+        #     for b in range(3):
+        #         if figure[a][b] == 1 and field[a][j + b] == 1:
+        #             spawn_in_ground = True
+        # if spawn_in_ground is True:
+        #     continue
+        depth = 0
+        while True:
+            if height[0] is not None:
+                if depth + height[0] == m - 1 or field[depth + height[0] + 1][j] == 1:
+  ################################### I swapped the order of the OR statement, Python short circuit made it so
+  ################################### there was no index out of bounds runtime error. that + 1 after depth +
+  ################################### height[index] exceeds the bounds of the field, within brackets evaluates
+  ################################### to len(field), i.e. m, which is an index error out of bounds.
+                    break
+            if height[1] is not None:
+                if depth + height[1] == m - 1 or field[depth + height[1] + 1][j + 1] == 1:
+                    break
+            if height[2] is not None:
+                if depth + height[2] == m - 1 or field[depth + height[2] + 1][j + 2] == 1:
+                    break
+            depth += 1
+        for a in range(3):
+            for b in range(3):
+                if figure[a][b] == 1:
+                    di[depth + a].remove(j + b)
+                    if len(di[depth + a]) == 0:
+                        return j
+        for a in range(3):
+            for b in range(3):
+                if figure[a][b] == 1:
+                    di[depth + a].add(j + b)        
+    
+    return output

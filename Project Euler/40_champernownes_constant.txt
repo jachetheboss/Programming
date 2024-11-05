@@ -1,0 +1,74 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <ctime>
+using namespace std;
+
+int main()
+{
+    clock_t start = clock();
+    
+    vector<int> prefix = {0};
+    for(int k = 1; k < 8; ++k){
+        prefix.push_back(prefix.back() + 9 * k * pow(10, k - 1));
+    }
+    cout << "prefix:" << '\n';
+    for(int i = 0; i < prefix.size(); ++i){
+        cout << prefix[i] << ' ';
+    } cout << '\n';
+    
+    vector<int> queries = {1, 10, 100, 1000, 10000, 100000, 1000000};
+    vector<int> query_results (7, 0);
+    for(int i = 0; i < queries.size(); ++i){
+        if(queries[i] <= 9){
+            query_results[i] = queries[i];
+            continue;
+        }
+        int index = 0; // index where the magnitude of the query lies
+        for(int j = 0; j < prefix.size(); ++j){
+            if(prefix[j] < queries[i]){
+                continue;
+            }else{
+                index = j;
+                break;
+            }
+        }
+        int digits_at_magnitude = queries[i] - prefix[index - 1];
+        int nth_num_at_magnitude = digits_at_magnitude / index;
+        if(digits_at_magnitude % index != 0){
+            nth_num_at_magnitude += 1;
+        }
+        nth_num_at_magnitude -= 1; // this is so because 0 is the first number. (0-indexed)
+        nth_num_at_magnitude += pow(10, index - 1);
+        int rem = digits_at_magnitude % index;
+        int place_value = 0;
+        if(rem != 0){ // if remainder == 0, then place value is also 0
+            place_value = index - rem;
+        }
+        int d = 0; // d is for digit. final value of d goes into query_results
+        for(int count = 0; count < place_value; ++count){
+            nth_num_at_magnitude /= 10;
+        }
+        d = nth_num_at_magnitude % 10;
+        query_results[i] = d;
+    }
+    int product = 1;
+    cout << "query_results:" << '\n';
+    for(int i = 0; i < query_results.size(); ++i){
+        cout << query_results[i] << ' ';
+        product *= query_results[i];
+    }
+    cout << "ans: " << product << '\n';
+    clock_t finish = clock();
+    
+    cout << "time elapsed: " << static_cast<float>(finish - start) / CLOCKS_PER_SEC << " seconds" << '\n';
+    return 0;
+}

@@ -1,0 +1,82 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <stack>
+#include <unordered_set>
+using namespace std;
+
+int scope_evaluator(string expression){ // unary negatives, addition, subtraction, multiplication, division,
+                                        // no parenthesis
+    string temp = "";
+    for(int i = 0; i < expression.length(); ++i){
+        if(expression[i] != ' '){
+            temp += expression[i];
+        }
+    }
+    expression = temp; // my implementation incurs extra memory since makes new string
+                       // to deal with whitespace characters. Should just do one pass through input, not two
+    
+    stack<float> values;
+    stack<bool> signs; // true positive, false negative
+    stack<int> operations; // 0 addition, 1 multiplication, 2 division
+    int start = 0;
+    if(expression[0] == '-'){
+        signs.push(false);
+        start = 1;
+    }
+    else{
+        signs.push(true);
+    }
+    unordered_set<char> operators;
+    string valid_operators = "+-*/";
+    for(int i = 0; i < valid_operators.length(); ++i){
+        operators.insert(valid_operators[i]);
+    }
+    string stringnum = "";
+    for(int i = start; i < expression.length(); ++i){
+        if(operators.count(expression[i]) == true){ // assume valid calculator expression input, so last
+                                                    // character within a parenthesis scope should never
+                                                    // be an operator character
+            float num = static_cast<float>(atoi(stringnum.c_str()));
+            values.push(num);
+            stringnum = "";
+            
+        }
+        else{
+            stringnum += expression[i];
+        }
+    }
+    
+    
+        
+    
+}
+int main(){
+    string line = "";
+    vector<string> lines;
+    while(true){
+        getline(cin, line);
+        for(int i = 0; i < line.length(); ++i){
+            if(line[i] == ' ' || line[i] == '\n'){
+                continue;
+            }
+        }
+        // if(cin.fail()){
+        //     break;
+        // }
+        if(line == ""){
+            break;
+        }
+        lines.push_back(line);
+    }
+    
+    // for(int i = 0; i < lines.size(); ++i){
+    //     cout << lines[i] << '\n';
+    //     cout << "length of line: " << lines[i].length() << '\n';
+    // }
+    
+    
+    
+    return 0;
+}

@@ -1,0 +1,49 @@
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <unordered_set>
+#include <ctime>
+// build some trees?
+using namespace std;
+
+
+// algorithm: consider only ships heading east, then consider only ships heading west, then bring two
+// results together. Shift the times of each lane so that their ships are located where they will be
+// located when the ferry arrives at the edge of the lane. "Freeze time," and starting with furthest
+// (or closest) lane, make that the base 2d vector of boats (inner vector indicate start and end) position
+// of boats, and then do a bunch of Leetcode-esque binary search merging intervals (in this case, more
+// efficient than doing a bunch of 2-pointer merging two binary arrays, since there is lots of wasteful
+// traversing of the already-merged 2d vector, and up to 10^5 merges will be called, a merge for each
+// newly included lane. But only up to 10^5 ships as well, each ship takes log(N) time to merge, N being
+// the number of intervals in the base 2d vector. Base 2d vector will only get smaller and smaller as
+// more merges happen, but the maximum size of the 2d vector is 10^5, since that is the most number
+// of ships that can be present in the input! So maximum number of merges is N * log(N), with N being 10^5.
+// Repeat for the ships heading west. Then find the INTERSECTION (intersection of Venn diagram) of shipless
+// stretches for both all eastward and all westward ships. Longest intersection stretch (not merge, INTERSECTION!)
+// is the output answer. Float output possible (maybe use double long)? since ferry can reach the borders
+// of the lanes with precision of fractions of a second (lane width is not wholly divisible by the speed)
+
+// I should get better at writing good test cases, concise, yet diverse!
+
+int main(){
+    // int N = 0; int W = 0; int U = 0; int V = 0; int T1 = 0; int T2 = 0;
+    // cin >> N >> W >> U >> V >> T1 >> T2; // much more concise !!!!!!!
+    // cout << N << ' ' << W << ' ' << U << ' ' << V << ' ' << T1 << ' ' << T2 << ' ';
+    // for(int cnt = 0; cnt < N; ++cnt){
+        
+    // }
+    clock_t start = clock();
+    unordered_set<int> hs;
+    for(int i = 0; i < 100000000; ++i){
+        // hm.insert({i, 0});
+        hs.insert(i);
+        continue;
+    }
+    clock_t finish = clock();
+    cout << "elapsed: " << 1.0 * static_cast<int>(finish - start) / CLOCKS_PER_SEC << " seconds" << '\n';
+    return 0; // return exit(success)? more readable?
+}

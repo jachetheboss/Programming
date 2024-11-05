@@ -1,0 +1,257 @@
+import random
+import copy
+import time
+
+#Greedy method of adding the digits if they aren't there
+
+def isSubseq(subseq, seq):
+
+    # two pointers method
+
+    i = 0
+
+    j = 0
+
+    while i < len(subseq) and j < len(seq):
+
+        if subseq[i] == seq[j]:
+
+            i += 1
+
+            j += 1
+
+        else:
+
+            j += 1
+
+    if i == len(subseq):
+
+        return True
+
+    else:
+
+        return False
+
+ 
+
+def generatePassword(inp):
+
+    password = ""
+
+    for subseq in inp:
+
+        if isSubseq(subseq, password):
+
+            continue
+
+            
+
+        if isSubseq(subseq[0 : 2], password):
+
+            password += subseq[2]
+
+            continue
+
+        if isSubseq(subseq[0], password):
+
+            #password += subseq[1 : ]
+
+            if len(password) == 1:
+
+                password += subseq[1: ]
+
+            else:
+
+                half = len(password) // 2
+
+                prefix = password[0 : half]
+
+                suffix = password[half : ]
+
+                password = prefix + subseq[1] + suffix + subseq[2]
+
+            continue
+
+       
+
+        if len(password) <= 1:
+
+            password += subseq
+
+        else:
+
+            half = len(password) // 2
+
+            prefix = password[0 : half]
+
+            suffix = password[half : ]
+
+            password = subseq[0] + prefix + subseq[1] + suffix + subseq[2]
+
+           
+
+        ### probably not optimal to add all the letters so close to one another. better to
+
+        ## add one at the beginning, another in the middle, another at the end,
+
+        ## or use some probabilistic algorithm to randomly choose whether it should be
+
+        ## beginning, middle, or end
+
+       
+
+              ### explore, play around with different variations of this greedy heuristic algorithm. No dynamic programming
+
+              # though
+
+    return password
+
+ 
+
+def generateRandPerm(inp):
+
+    """
+
+    perm = []
+
+    x = copy.deepcopy(inp)
+
+    while len(x) > 0:
+
+        idx = random.randint(0, len(x) - 1) # randint is inclusive, left to right
+
+        perm.append(x[idx])
+
+        del x[idx]
+
+    return perm
+
+    """
+
+    perm = []
+
+    arr = inp[:]
+
+    ## try load factor as 0.3 or 0.5, 0.3 is probably more optimal. what is the most optimal load factor?
+
+    load_factor = 0.5
+
+    rem = len(arr)
+
+    while rem > 0:
+
+        if len(arr) == 1:
+
+            perm.append(arr[0])
+
+            break
+
+        if rem < load_factor * len(arr): # spring cleaning
+
+            i = 0
+
+            for j in range(len(arr)):
+
+                if j == i:
+
+                    if arr[j] == -1:
+
+                        continue
+
+                    else:
+
+                        i += 1
+
+                else:
+
+                    if arr[j] != -1:
+
+                        arr[i] = arr[j]
+
+                        arr[j] = -1
+
+                        i += 1
+
+            while arr[-1] == -1:
+
+                arr.pop()
+
+               
+
+        idx = random.randint(0, len(arr) - 1)
+
+        if arr[idx] == -1:
+
+            continue
+
+        rem -= 1
+
+        perm.append(arr[idx])
+
+        arr[idx] = -1
+
+       
+
+    return perm
+
+ 
+
+inp = []
+
+fin = open("inp.txt", "r")
+
+line = fin.readline().strip()
+
+while line != "":
+
+    inp.append(line)
+
+    line = fin.readline().strip()
+
+ 
+
+fin.close()
+
+print("inp:", inp)
+
+ 
+
+start = time.perf_counter()
+
+ 
+
+#"""
+
+shortest = float("inf")
+
+for _ in range(10**5):
+
+    perm = generateRandPerm(inp)
+
+    password = generatePassword(perm)
+
+    if len(password) < shortest:
+
+        shortest = len(password)
+
+        print("password:", password)
+
+       
+
+print("shortest:", shortest)
+
+#"""
+
+"""
+
+for _ in range(10**5):
+
+    random.randint(0, 50)
+
+"""
+
+ 
+
+end = time.perf_counter()
+
+print("elapsed secs:", end - start)

@@ -1,0 +1,122 @@
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+
+#include <iostream>
+// #include <sstream>
+// #include <unordered_map>
+#include <stack>
+#include <vector>
+#include <ctime>
+
+using namespace std;
+
+long DFS(int N){
+    stack<int> dfs_stack; dfs_stack.push(N);
+    // unordered_map<int, long> memo; // memoize
+    // memo.insert({0, 0}); memo.insert({1, 1});
+    // vector<long> memo (N + 1, 0); memo[1] = 1;
+    // vector<bool> found (N + 1, false); found[0] = true; found[1] = true;
+    int size = N + 1;
+    int memo[size]; memo[0] = 0; memo[1] = 1;
+    bool found[size]; found[0] = true; found[1] = true;
+    for(int i = 2; i < size; ++i){
+        found[i] = false;
+    }
+    int term = N;
+    // while(memo.count(N) == false)
+    while(found[N] == false){
+        // if(memo.count(term - 2) == false)
+        if(found[term - 2] == false){
+            term = term - 2;
+            dfs_stack.push(term);
+        // }else if(memo.count(term - 1) == false)
+        }else if(found[term - 1] == false){
+            term = term - 1;
+            dfs_stack.push(term);
+        // }else{ // term - 2 and term - 1 are both memoized. The way comments are processed, when double
+               // backslash is parsed, switch mode to wait for a carriage return or newline in code!
+        }else{
+            // memo.insert({term, memo[term - 1] + memo[term - 2]});
+            found[term] = true;
+            memo[term] = memo[term - 2] + memo[term - 1];
+            dfs_stack.pop();
+            if(dfs_stack.size() != 0){
+                term = dfs_stack.top();
+            }
+        }
+    }
+    return memo[N];
+}
+long BFS(int N){
+    vector<int> bfs_vec = {N};
+    long output = 0;
+    while(bfs_vec.size() != 0){
+        vector<int> temp; // empty vector for the next breadth, initialized size 0
+        for(int i = 0; i < bfs_vec.size(); ++i){
+            if(bfs_vec[i] == 1){
+                output += 1;
+            }else if(bfs_vec[i] > 1){
+                temp.push_back(bfs_vec[i] - 2);
+                temp.push_back(bfs_vec[i] - 1);
+            }
+        }
+        bfs_vec = temp;
+    }
+    return output;    
+}
+long recursion(int N){ // recursion implementation may be more efficient than my own DFS because
+                      // recursion remembers where the previous stack frame left off, but my own DFS
+                      // always checks left first (N - 2) and then right (N - 1), wastes time
+    if(N == 0){
+        return 0;
+    }else if(N == 1){
+        return 1;
+    }else{
+        return recursion(N - 2) + recursion(N - 1);
+    }
+}
+long DP(int N){
+    if(N == 0){
+        return 0;
+    }else if(N == 1){
+        return 1;
+    }
+    // else
+    int x = 0;
+    int y = 1;
+    int z; // return type is long however.
+    for(int count = 0; count < N - 1; ++count){
+        z = x + y;
+        x = y;
+        y = z;
+    }
+    return z;
+}
+int main(){
+    cout << "Find the Nth fibonacci term. N: ";
+    int N = 0;
+    cin >> N;
+    cout << '\n';
+    clock_t start = clock();
+    long fib_val = DFS(N);
+    clock_t finish = clock();
+    cout << "DFS fib(" << N << "): " << fib_val << '\n';
+    cout << "seconds elapsed: " << static_cast<float>(finish - start) / CLOCKS_PER_SEC << " seconds" << "\n\n";
+    // start = clock();
+    // fib_val = BFS(N);
+    // finish = clock();
+    // cout << "BFS fib(" << N << "): " << fib_val << '\n';
+    // cout << "seconds elapsed: " << static_cast<float>(finish - start) / CLOCKS_PER_SEC << " seconds" << "\n\n";
+    // start = clock();
+    // fib_val = recursion(N);
+    // finish = clock();
+    // cout << "recursion fib(" << N << "): " << fib_val << '\n';
+    // cout << "seconds elapsed: " << static_cast<float>(finish - start) / CLOCKS_PER_SEC << " seconds" << "\n\n";
+    start = clock();
+    fib_val = DP(N);
+    finish = clock();
+    cout << "DP fib(" << N << "): " << fib_val << '\n';
+    cout << "seconds elapsed: " << static_cast<float>(finish - start) / CLOCKS_PER_SEC << " seconds" << "\n\n";
+    
+    return 0;
+}

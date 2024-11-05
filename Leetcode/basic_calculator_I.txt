@@ -1,0 +1,7 @@
+class Solution:
+    def calculate(self, s: str) -> int:
+
+        + or - sign stack to flip all signs in the parenthesis
+        when parenthesis opens, push 0 onto stack (in new scope, sum is zero), this even takes care of expressions such as ((())), 
+just a bunch of zeroes 0, 0, 0 in the scope
+        value stack keeping track of cummulative total in each scope

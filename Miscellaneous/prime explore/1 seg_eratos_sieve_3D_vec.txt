@@ -1,0 +1,203 @@
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <cmath>
+
+using namespace std;
+
+#include <unistd.h>
+#include <ios>
+#include <fstream>
+#include <string>
+
+void mem_usage(double& vm_usage, double& resident_set) {
+   vm_usage = 0.0;
+   resident_set = 0.0;
+   ifstream stat_stream("/proc/self/stat",ios_base::in); //get info from proc directory
+   //create some variables to get info
+   string pid, comm, state, ppid, pgrp, session, tty_nr;
+   string tpgid, flags, minflt, cminflt, majflt, cmajflt;
+   string utime, stime, cutime, cstime, priority, nice;
+   string O, itrealvalue, starttime;
+   unsigned long vsize;
+   long rss;
+   stat_stream >> pid >> comm >> state >> ppid >> pgrp >> session >> tty_nr
+   >> tpgid >> flags >> minflt >> cminflt >> majflt >> cmajflt
+   >> utime >> stime >> cutime >> cstime >> priority >> nice
+   >> O >> itrealvalue >> starttime >> vsize >> rss; // don't care about the rest
+   stat_stream.close();
+   long page_size_kb = sysconf(_SC_PAGE_SIZE) / 1024; // for x86-64 is configure to use 2MB pages
+   vm_usage = vsize / 1024.0;
+   resident_set = rss * page_size_kb;
+}
+
+
+vector<int> seg_sieve(int range_size, int seg_size){
+    
+    // before going to bed, think about segmented sieve of Eratosthenes! And learn the linear sieve.
+    // Is there a segmented linear sieve?
+    
+    vector<int> primes;
+    int num_blocks = range_size / seg_size;
+    
+    if(range_size % seg_size != 0){
+        num_blocks += 1;
+    }
+    cout << "num_blocks: " << num_blocks << endl;
+    
+    vector<vector<vector<int>>> blocks (num_blocks, vector<vector<int>>());
+    cout << "blocks.size() " << blocks.size() << endl;
+    
+    // REMEMBER, USING bool INSTEAD OF int USES 1 byte instead of 4 bytes, at a
+    // cost in runtime since bit manipulation is used for bool.
+    // 20 sec vs 1 sec runtime for basic Sieve of Euler, 10^8 range_size
+    
+    // 1st seg contains (0, seg_size) inclusive, 1 element larger than other
+    // segs (expect last seg, which may be partial size if seg_size does not divide range_size)
+    
+    vector<int> block (seg_size + 1, 1); // 1 means prime, 0 composite
+    block[0] = 0;
+    block[1] = 0;
+    int bound = (int)(floor(sqrt(seg_size)));
+    for(int k = 2; k <= bound; ++k){
+        if(block[k] == 1){
+            for(int j = k * k; j < block.size(); j += k){
+                block[j] = 0;
+            }
+        }
+    }
+    for(int k = 2; k < block.size(); ++k){
+        if(block[k] == 1){
+            primes.push_back(k);
+            if(blocks.size() > 1){
+                blocks[1].push_back({k, k * (seg_size / k + 1)}); // blocks is 0-indexed
+            }
+        }
+    }
+    
+    block.pop_back(); // erase last element, rest of the segs are smaller
+    
+    int seg1_p_max = primes.back();
+    
+    cout << "size 1st block: " << primes.size() << endl;
+    
+    int curr_block = 1;
+    
+    // did curr_block.size() blow up? A lot of duplicate next_m values?
+    
+    // how about implement a min_heap to have the left <= next_m <= right checker?
+    
+    for(int left = seg_size + 1; left <= range_size; left += seg_size){
+        
+        int right = min(left + seg_size - 1, range_size);
+
+        for(int i = 0; i < block.size(); ++i){ // REMEMBER TO RESET BLOCK TO ALL PRIME!
+            block[i] = 1;
+        }
+        
+        // cout << "curr_block: " << curr_block << "  size: " << blocks[curr_block].size() << endl;
+        
+        for(int i = 0; i < blocks[curr_block].size(); ++i){
+            
+            int p = blocks[curr_block][i][0];
+            int next_m = blocks[curr_block][i][1];
+            
+            // if(curr_block == 117 and (i % 1000 == 0)){
+            //     cout << "hello" << endl;
+            //     cout << "i: " << i;
+            // }
+                
+            if(p <= seg1_p_max){
+                for(int j = next_m - left; j < block.size(); j += p){   // p for prime, also the gap size
+                    block[j] = 0;
+                }
+                next_m = p * (right / p + 1);
+                int next_block = next_m / seg_size;
+                if(curr_block != num_blocks - 1 and next_block < num_blocks){
+                    blocks[next_block].push_back({p, next_m});
+                }
+            }
+            else{
+                block[next_m - left] = 0;
+                next_m += p;
+                int next_block = next_m / seg_size;
+                if(curr_block != num_blocks - 1 and next_block < num_blocks){
+                    blocks[next_block].push_back({p, next_m});
+                }
+            }
+            // if(curr_block == 117 and (i % 1000 == 0)){
+            //     cout << "hello" << endl;
+            //     cout << "i: " << i;
+            // }
+        }
+        
+        // cout << "left: " << left << endl;
+
+        
+        // clear curr_block to save memory
+        
+        blocks[curr_block].clear();
+        
+
+        
+        int bound = min(range_size - left + 1, (int)block.size());
+        for(int i = 0; i < bound; ++i){
+            if(block[i] == 1){
+                int p = left + i;
+                primes.push_back(p);
+                int next_block = 2 * p / seg_size;
+                if(next_block < num_blocks){
+                    blocks[next_block].push_back({p, 2 * p});
+                }
+            }
+        }
+        
+        curr_block += 1;
+    }
+    return primes;
+}
+
+int main()
+{
+    // segmented sieve
+    
+    // int n, q;
+    // cin >> n >> q;
+    
+    double vm, rss;
+
+    
+    int n = 1e8;
+    vector<int> seg_sizes = {853450, 1000000, 10000000, 100000000}; // ok, so non-divisible segsizes have problems
+    for(int i = 0; i < seg_sizes.size(); ++i){
+    
+        int seg_size = seg_sizes[i];
+        
+        clock_t begin = clock();
+        vector<int> primes = seg_sieve(n, seg_size);
+        
+        mem_usage(vm, rss);
+        cout << "Virtual Memory: " << vm << "\nResident set size: " << rss << endl;
+       
+        clock_t end = clock();
+        
+        cout << primes.size() << endl;
+        cout << "elapsed: " << 1.0 * (end - begin) / CLOCKS_PER_SEC << " sec" << endl << endl;
+    }
+    
+    mem_usage(vm, rss);
+    cout << "Virtual Memory: " << vm << "\nResident set size: " << rss << endl;
+
+    
+    // vector<int> queries;
+    // int num;
+    // for(int i = 0; i < q; ++i){
+    //     cin >> num;
+    //     // binary search for num in primes vector
+    // }
+
+    return 0;
+}

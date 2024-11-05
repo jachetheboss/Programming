@@ -1,0 +1,119 @@
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+
+#include <iostream>
+#include <vector>
+#include <ctime>
+#include <cmath>
+#include <queue>
+
+using namespace std;
+
+class comparator{
+	public:
+	bool operator()(vector<int> v1, vector<int> v2){
+		return v1[0] > v2[0];
+	}
+};
+
+vector<int> seg_sieve(int range_size, int seg_size){
+    
+    // before going to bed, think about segmented sieve of Eratosthenes! And learn the linear sieve.
+    // Is there a segmented linear sieve?
+    
+    vector<int> primes;
+    priority_queue<vector<int>, vector<vector<int>>, comparator> minq; // store next_multiple
+    
+    // REMEMBER, USING bool INSTEAD OF int USES 1 byte instead of 4 bytes, at a
+    // cost in runtime since bit manipulation is used for bool.
+    // 20 sec vs 1 sec runtime for basic Sieve of Euler, 10^8 range_size
+    
+    vector<int> block (seg_size + 1, 1); // 1 means prime, 0 composite
+    block[0] = 0;
+    block[1] = 0;
+    int bound = (int)(floor(sqrt(seg_size)));
+    for(int k = 2; k <= bound; ++k){
+        if(block[k] == 1){
+            for(int j = k * k; j < block.size(); j += k){
+                block[j] = 0;
+            }
+        }
+    }
+    for(int k = 2; k < block.size(); ++k){
+        if(block[k] == 1){
+            int next_m = k * (seg_size / k + 1);
+            minq.push({next_m, k});
+            primes.push_back(k);
+        }
+    }
+    
+    int seg1_p_max = primes.back();
+    
+    cout << "size 1st block: " << primes.size() << endl;
+    
+    for(int left = seg_size + 1; left <= range_size; left += seg_size){
+        
+        int right = min(left + seg_size - 1, range_size);
+
+        for(int i = 0; i < block.size(); ++i){ // REMEMBER TO RESET BLOCK TO ALL PRIME!
+            block[i] = 1;
+        }
+        
+        // use minq
+        while(minq.top()[0] <= right){
+            int next_m = minq.top()[0];
+            int p = minq.top()[1];
+            if(p <= seg1_p_max){
+                for(int i = next_m - left; i < block.size(); i += p){
+                    block[i] = 0;
+                }
+                next_m = p * (right / p + 1);
+            }else{
+                block[next_m - left] = 0;
+                next_m += p;
+            }
+            minq.push({next_m, p});
+            minq.pop();
+        }
+        
+        int bound = right - left;
+        for(int i = 0; i <= bound; ++i){
+            if(block[i] == 1){
+                int p = left + i;
+                primes.push_back(p);
+            }
+        }
+    }
+    return primes;
+}
+
+int main()
+{
+    // segmented sieve
+    
+    // int n, q;
+    // cin >> n >> q;
+    int n = 1e7;
+    vector<int> seg_sizes = {83564, 100000, 1000000, 10000000};
+    for(int i = 0; i < seg_sizes.size(); ++i){
+    
+        int seg_size = seg_sizes[i];
+        
+        clock_t begin = clock();
+        vector<int> primes = seg_sieve(n, seg_size);
+        clock_t end = clock();
+        
+        cout << primes.size() << endl;
+        cout << "elapsed: " << 1.0 * (end - begin) / CLOCKS_PER_SEC << " sec" << endl << endl;
+    }
+    
+    
+    // vector<int> queries;
+    // int num;
+    // for(int i = 0; i < q; ++i){
+    //     cin >> num;
+    //     // binary search for num in primes vector
+    // }
+
+    return 0;
+}

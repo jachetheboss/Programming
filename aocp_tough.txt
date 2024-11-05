@@ -1,0 +1,19 @@
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <ctime>
+#include <cmath>
+#include <unordered_map>
+#include <unordered_set>
+#include <limits>
+
+#def MOD 1000000007
+
+using namespace std;
+
+int main(){
+    long long
+    return 0;
+}

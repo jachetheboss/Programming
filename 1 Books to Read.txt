@@ -1,0 +1,122 @@
+Related
+What are must-read books on theoretical computer science?
+This is a list of important books to learn theory CS. They may not be “must-read” but certainly very useful.
+
+(Undergrad Books)
+1. Introduction to Algorithms, 3Ed. (International Edition) by Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein
+ISBN-13: 978-0262033848
+
+2. Algorithm Design 1st Edition (English, Paperback, Eva Tardos, Jon Kleinberg)
+ISBN-13: 978-9332518643
+
+3. Algorithms Illuminated (Part 1): The Basics Paperback
+by Tim Roughgarden (Author)
+ISBN-13: 978-0999282908
+
+4. Algorithms Illuminated (Part 2): Graph Algorithms and Data Structures: Volume 2 – by Tim Roughgarden (Author)
+ISBN-13: 978-0999282922
+
+5. ALGORITHMS
+by Sanjoy Dasgupta (Author), Christos Papadimitriou (Author), Umesh Vazirani
+ISBN-13: 978-0070636613
+
+6. Introduction to Algorithms: A Creative Approach 1st Edition by Udi Manber
+ISBN-13: 978-0201120370
+
+7. Introduction to the Theory of Computation by Michael Sipser (Author)
+ISBN-13: 978-8131525296
+
+8. Discrete Mathematics and Its Applications (SIE) by Kenneth Rosen (Author)
+ISBN-13: 978-0070681880
+
+(Graduate Algorithms)
+
+Randomized Algorithms
+by Rajeev Motwani (Author), Prabhakar Raghavan (Author)
+ISBN-13: 978-0521613903
+Approximation Algorithms
+by Vijay V. Vazirani (Author)
+ISBN-13: 978-8181283856
+The Design of Approximation Algorithms
+by David P. Williamson (Author), David B. Shmoys (Author)
+ISBN-13: 978-0521195270
+Online Computation and Competitive Analysis
+by Allan Borodin (Author), Ran El-Yaniv (Author)
+ISBN-13: 978-0521619462
+Parameterized Algorithms
+by Marek Cygan (Author), Fedor V. Fomin (Author), Łukasz Kowalik (Author), Daniel Lokshtanov (Author), Dániel Marx (Author), Marcin Pilipczuk (Author), Michal Pilipczuk (Author), Saket Saurabh (Author)
+ISBN-13: 978-3319357027
+Computational Geometry: Algorithms And Applications by Mark de Berg, Otfried Cheong, Marc van Kreveld, Mark Overmars
+ISBN-13: 978-8184898750
+(Optimization)
+
+Theory of Linear and Integer Programming (Wiley Series in Discrete Mathematics & Optimization) Paperback
+by Alexander Schrijver (Author)
+ISBN-13: 978-0471982326
+Combinatorial Optimization (3 volume, A,B, & C) 1st Edition
+by Alexander Schrijver (Author)
+ISBN-13: 978-3540443896
+(Probability)
+
+Probability and Random Processes
+by Geoffrey Grimmett (Author), David Stirzaker (Author)
+ISBN-13: 978-0198572220
+The Probabilistic Method (Wiley Series in Discrete Mathematics and Optimization) by Noga Alon (Author), Joel H. Spencer (Author)
+ISBN-13: 978-0470170205
+Probability and Computing: Randomization and Probabilistic Techniques in Algorithms and Data Analysis by Michael Mitzenmacher (Author), Eli Upfal (Author)
+ISBN-13: 978-1107154889
+(Complexity)
+
+Computational Complexity: A Modern Approach by Sanjeev Arora (Author), Boaz Barak (Author)
+ISBN-13: 978-0521424264
+Computers and Intractability: A Guide to the Theory of NP-Completeness by Michael R. Garey (Author), David S. Johnson (Author)
+ISBN-13: 978-0716710455
+(Linear Algebra/Matrices/Machine Learning/Convex Optimization)
+
+Convex Optimization by Lieven Vandenberghe Stephen Boyd (Author)
+ISBN-13: 978-1316603598
+Matrix Analysis
+by Horn and Johnson
+ISBN-13: 978-1107518940
+Advanced Linear Algebra, 3rd Edtion Paperback – 2011
+by Roman Steven (Author)
+ISBN-13: 978-8132202974
+(Quantum)
+
+Quantum Computing since Democritus Paperback
+by Scott Aaronson
+ISBN-13: 978-0521199568
+Quantum Computation and Quantum Information Paperback
+by Nielsen and Chuang
+ISBN-13: 978-1107619197
+(Other)
+
+Algorithmic Game Theory
+by Noam Nisan (Editor), Tim Roughgarden (Editor), Eva Tardos (Editor), Vijay V. Vazirani (Editor)
+ISBN-13: 978-0521872829
+The Princeton Companion to Mathematics Third Printing Used Edition
+by Timothy Gowers (Editor), June Barrow-Green (Editor), Imre Leader (Editor)
+ISBN-13: 978-0691118802
+Analysis of Boolean Functions Hardcover – 5 Jun 2014
+by Ryan O'Donnell (Author)
+ISBN-13: 978-1107038325
+Concrete Mathematics: A Foundation for Computer Science (2nd Edition) 2nd Edition
+by Ronald L. Graham (Author), Donald E. Knuth (Author), Oren Patashnik (Author)
+ISBN-13: 978-0201558029
+Graph Theory (Graduate Texts in Mathematics)
+by Reinhard Diestel (Author)
+ISBN-13: 978-3662575604
+Introduction to Graph Theory by Doughlas West (Author)
+ISBN-13: 978-9332549654
+Topics in Algebra Paperback
+by I.N. Herstein
+ISBN-13: 978-8126510184
+Abstract Algebra, 3ed Paperback
+by David S. Dummit (Author), Richard M. Foote (Author)
+ISBN-13: 978-8126532285
+Real Analysis: Modern Techniques and Their Applications 2nd Edition
+by Gerald B. Folland (Author)
+ISBN-13: 978-0471317166
+A Course in Combinatorics by R. M. Wilson (Author), J. H. Van Lint (Author)
+ISBN-13: 978-0521718172
+The Art of Computer Programming, Volumes 1-4A Boxed Set (Box Set) ISBN-13: 978-032175104

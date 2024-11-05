@@ -1,0 +1,91 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#pragma GCC optimize("Ofast")
+#pragma GCC target("avx,avx2,fma")
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+using namespace std;
+
+bool is_prime(int num){
+    if(num == 1){
+        return false;
+    }
+    int limit = static_cast<int>(floor(sqrt(num)));
+    for(int k = 2; k < limit + 1; ++k){
+        if(num % k == 0){
+            return false;
+        }
+    }
+    return true;
+}
+
+vector<int> generate_more_squares(vector<int> squares){
+    // generate 50 more squares each time this is called. Memory scaling, don't generate all squares
+    // at once, they might not be all used, so that would be wasting runtime and memory generating
+    // the squares that are not used. I only generate more squares if they need to be generated.
+    int start = squares.size() + 1;
+    for(int k = start; k < start + 50; ++k){
+        squares.push_back(k * k);
+    }
+    return squares; // instead of returning a vector<int> could just pass vector<int>& squares by
+                    // reference, which is more efficient since it does not have to make a deepcopy!
+}
+int main()
+{
+    
+    
+    clock_t start = clock(); // REMEMBER, THE VARIABLE NAME start IS USED IN generate_more_squares()
+                             // FUNCTION, BUT SINCE I THINK SAME VARIABLE NAME IS USED IN DIFFERENT
+                             // SCOPES, IT IS ALLOWED! BUT BE CAREFUL!
+    
+    vector<int> perfect_squares;
+    for(int k = 1; k <= 50; ++k){
+        perfect_squares.push_back(k * k); // again, don't make temporary variables like these!
+                                          // int multiplied by int creates int internal C++ temporary,
+                                          // could overflow the std::numeric_limits<int>::max()
+    }
+    int k = 9;
+    int counterexample = 0;
+    while(true){
+        if(is_prime(k) == true){
+            k += 2;
+            continue;
+        } // else composite, remember to still k+= 2
+        while(k > 2 * perfect_squares.back()){  // guaranteed a composite odd number
+                                           // (divisible by three and not even) every 6 numbers
+            perfect_squares = generate_more_squares(perfect_squares);
+        }
+        bool counterexample_found = true;
+        for(int i = 0; i < perfect_squares.size(); ++i){
+            int diff = k - 2 * perfect_squares[i];
+            if(diff <= 0){ // could move this logic into the is_prime() helper function.
+                           // if is_prime() argument is 0 or 1, then return false (0 and 1 are not prime)
+                break;
+            }
+            if(is_prime(diff) == true){
+                counterexample_found = false;
+                break;
+            }
+        }
+        if(counterexample_found == true){
+            counterexample = k;
+            break;
+        }else{
+            k += 2;
+        }
+    }
+    
+    clock_t finish = clock();
+    
+    cout << "smallest counterexample: " << counterexample << '\n';
+    cout << "time elapsed: " << static_cast<float>(finish - start) / CLOCKS_PER_SEC << " seconds" << '\n';
+    return 0;
+}

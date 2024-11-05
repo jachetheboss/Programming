@@ -1,0 +1,96 @@
+class Solution {
+public:
+    bool canJump(vector<int>& nums) {
+        // this is a very extra code! Just trying to extend my
+        // programming limits.
+        // TURNING THIS PROBLEM INTO A BREADTH-FIRST-SEARCH !!!!!!!
+        if(nums[0] == 0){
+            if(nums.size() == 1){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        // since we already checked if nums[0] == 0,
+        // we know that the first stretch is a land_block, not
+        // a zero_block.
+        // land_blocks/zero_blocks contain ranges of consecutive
+        // zero/non-zero values.
+        vector<vector<int>> land_blocks; // non-zero islands
+        vector<vector<int>> zero_blocks; // blocks of consecutive zeros (water)
+        bool mode = true; // true means finding land_blocks,
+                          // false means finding zero_blocks
+        int start = 0;
+        for(int i = 0; i < nums.size(); ++i){
+            if(mode == true){
+                if(nums[i] == 0){
+                    land_blocks.push_back({start, i - 1}); // block ranges
+                                                          // inclusive
+                    mode = false;
+                    start = i;
+                }
+            }else{ // mode == false
+                if(nums[i] != 0){
+                    zero_blocks.push_back({start, i - 1});
+                    mode = true;
+                    start = i;
+                }
+            }
+        }
+        if(mode == true){
+            land_blocks.push_back({start, (int)(nums.size() - 1)});
+            // I should instead use static_cast<int> !!!!!!!
+        }else{
+            zero_blocks.push_back({start, (int)(nums.size() - 1)});
+        }
+        
+        if(zero_blocks.size() == 0){ // if no zeros, then last index
+                                     // guaranteed to be reachable
+            return true;
+        }
+        vector<vector<int>> block_allegiance (nums.size(), vector<int>());
+        for(int i = 0; i < land_blocks.size(); ++i){
+            for(int j = land_blocks[i][0]; j <= land_blocks[i][1]; ++j){
+                block_allegiance[j] = {i, 1};
+            }
+        }
+        for(int i = 0; i < zero_blocks.size(); ++i){
+            for(int j = zero_blocks[i][0]; j <= zero_blocks[i][1]; ++j){
+                block_allegiance[j] = {i, 0};
+            }
+        }// block_allegiance {i, 0 or 1} i is the block index of
+         // either land_blocks or zero_blocks, 1 means land, 0 means zero
+        
+        // cout << "block_allegiance:" << '\n';
+        // for(int i = 0; i < block_allegiance.size(); ++i){
+        //     cout <<'{'<<block_allegiance[i][0]<<','<<block_allegiance[i][1]<<"} ";
+        // }
+        
+        vector<int> BFS = {0}; // Breadth-First-Search vector of 
+                              // land_blocks indices
+        int max_block_reached = 0;
+        while(BFS.size() != 0){ // while all paths do not end
+            vector<int> TEMP;
+            for(int i = 0; i < BFS.size(); ++i){
+                if(BFS[i] == zero_blocks.size()){
+                    return true; // if already reached final land block
+                                // and no zero block follows, then final
+                               // index of nums is reached !!!!!!!
+                }
+                for(int j = land_blocks[BFS[i]][0]; j <= land_blocks[BFS[i]][1]; ++j){
+                    if(j + nums[j] >= nums.size() - 1){
+                        return true;
+                    }
+                    if(j + nums[j] > zero_blocks[BFS[i]][1] && block_allegiance[j + nums[j]][0] > max_block_reached){
+                        for(int k = max_block_reached + 1; k <= block_allegiance[j + nums[j]][0]; ++k){
+                            TEMP.push_back(k); // k is block
+                        }
+                        max_block_reached = block_allegiance[j + nums[j]][0];
+                    }
+                }
+            }
+            BFS = TEMP;   
+        }
+        return false;
+    }
+};

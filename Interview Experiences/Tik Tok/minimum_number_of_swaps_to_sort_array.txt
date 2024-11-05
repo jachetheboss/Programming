@@ -1,0 +1,1 @@
+just a bunch of graph cycles also selection sort does minimum swaps

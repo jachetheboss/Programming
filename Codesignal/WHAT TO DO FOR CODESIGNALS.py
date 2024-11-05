@@ -1,0 +1,12 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Sep 21 00:20:46 2022
+
+@author: james
+"""
+
+DIAGONAL RECTANGLES MAX SUM IN A 50 x 50 MATRIX!!!!!!!!!!!!!!!!!!!!!
+
+HOW MANY SUBARRAYS OF LENGTH M HAVE AT LEAST ONE PAIR OF 
+ELEMENTS WITH DISTINCT INDICES THAT SUM TO K
+

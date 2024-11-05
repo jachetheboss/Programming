@@ -1,0 +1,111 @@
+// #include <boost>
+#include <iostream>
+#include <vector>
+#include <string>
+#include <unordered_map>
+#include <unordered_set>
+#include <algorithm>
+#include <cmath>
+#include <ctime>
+using namespace std;
+
+// greedy aspect of this problem is that the higher up the camera lens, the better.
+// So extending the tripod all the way to the max 4 ft is optimal. Then adjust the tripod x_coor position.
+
+int main(){
+    string line1 = "";
+    cin >> line1;
+    long long N = static_cast<long long>(atoi(line1.c_str()));
+    string string_elevation = "";
+    cin >> string_elevation;
+    long long elevation = static_cast<long long>(atoi(string_elevation.c_str()));
+    long long highest = elevation;
+    int highest_i = 0;
+    vector<long long> heights = {elevation};
+    for(int i = 1; i < N; ++i){
+        string string_height = "";
+        cin >> string_height;
+        long long height = static_cast<long long>(atoi(string_height.c_str()));
+        if(height > highest){
+            highest = height;
+            highest_i = i;
+        }
+        heights.push_back(height);
+    }
+    if(highest - elevation <= 4){
+        cout << 0;
+        return 0;
+    }
+    
+    // instead of 1.0, which may be float, try static_cast<double long>(1) maybe?
+    long long max_change_in_x = 0;
+    for(int i = 0; i < highest_i; ++i){
+        long long rise = highest - heights[i];
+        long long run = static_cast<long long>(highest_i - i);
+        long long simplified_rise = rise / __gcd(rise, run);
+        long long simplified_run = run / __gcd(rise, run);
+        if((highest - elevation - 4) % simplified_rise == 0){
+            long long change_in_x = (highest - elevation - 4) / simplified_rise * simplified_run + 1;
+            if(change_in_x > max_change_in_x){
+                max_change_in_x = change_in_x;
+            }
+        }
+        else{ // no double long fuckery needed, can just use int division and mod !!!!!!! Better EXACT
+              // precision than approximation ! Boost library should do the job, but not allowed in ICPC
+            // double long slope = static_cast<double long>(1) * rise / run;
+            // double long approx_change_in_x = static_cast<double long>(1) * (highest - elevation - 4) / slope;
+            // int change = ceil(approx_change_in_x);
+            // if(change > max_change_in_x){
+            //     max_change_in_x = change;
+            // }
+            long long x_change = 0;
+            x_change += (highest - elevation - 4) / simplified_rise * simplified_run;
+            long long leftover = (highest - elevation - 4) % simplified_rise;
+            x_change += simplified_run * leftover / simplified_rise;
+            if((simplified_run * leftover) % simplified_rise != 0){
+                x_change += 1;
+            }
+            if(x_change > max_change_in_x){
+                max_change_in_x = x_change;
+            }
+        }
+    }
+    cout << max_change_in_x - highest_i;
+    
+    // for(int i = 0; i < heights.size(); ++i){
+    //     cout << heights[i] << ' ';
+    // }
+    // cout << '\n';
+    // cout << "highest: " << highest << '\n';
+    // cout << "highest_i: " << highest_i << '\n';
+    
+    // double long min_slope = std::numeric_limits<double long>::max();
+    // for(int i = 0; i < highest_i; ++i){
+    //     double long slope = static_cast<double long>(1) * (highest - heights[i]) / (highest_i - i);
+    //     if(slope < min_slope){
+    //         min_slope = slope;
+    //     }
+    // }
+    
+    // // cout << "min_slope: " << min_slope << '\n';
+    
+    // // // if(min_slope == std::numeric_limits<double long>::max()){ // checks if highest peak is starting elevation!
+    // // //     cout << 0;
+    // // }
+    // double long DELTA_EPSILON = std::numeric_limits<double long>::epsilon();
+    // // int change_in_x = static_cast<int>(floor(static_cast<double long>(1) * (highest - elevation - 4) / min_slope + 1));
+    // int change_in_x = static_cast<int>(ceil(static_cast<double long>(1) * (highest - 4 - elevation) / (min_slope - DELTA_EPSILON)));
+    // // int change_in_x = static_cast<int>(ceil(static_cast<double long>(1) * (highest - 4 - elevation) / min_slope));
+    // // if(ceil(static_cast<double long>(1) * (highest - 4) / min_slope) - static_cast<double long>(1) * (highest - 4) / min_slope < DELTA_EPSILON){
+    // //     change_in_x += 1;
+    // // }
+    // int output = change_in_x - highest_i;
+    // cout << output;
+    
+    
+    // double long num = std::numeric_limits<double long>::max();
+    // cout << "double long numeric limit: " << num << '\n';
+    
+    
+    return 0;
+}

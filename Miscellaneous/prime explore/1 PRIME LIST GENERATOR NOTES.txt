@@ -1,0 +1,16 @@
+prime number list generator:
+brute force: check all numbers in range, check each number for divisors <= sqrt(itself), runs O(n root n)
+start with prime list 2: Then for each num in range starting with 3, check if divisible by any of the previously found primes. If prime, then add to prime list. Since around x/log(x) primes in range x, complexity is O(n^2 / log(n))
+basic sieves: Sieve of Eratosthenes O(n log log n), Sieve of Euler O(n)
+More advanced sieves
+prime factorization in range can also be brute-forced by checking each number individually,
+but it can also be sieved efficiently. Similarly, all proper divisors of nums in a range can be sieved,
+as well as LCM of range of numbers.
+
+prime number list generator method 2. can be optimized by calculating square roots ahead of time.
+Instead of calculating square roots every time, "calculate" by using multiplication (but then again, if implementation has the square as hashmap key and the root as value, must deal with added runtime constant multiple of hashing!)
+--- complexity from O(n^2 / log(n)) to O(n sqrt(n) / log(n))
+
+--- 4. To reduce sieving memory usage, can split the sieve into multiple segments. Instead of one big array of size n = 10**9 (too much memory to allocate all at once), can split into multiple sieve chunks of array length 1000, or array length 1,000,000. Experiment to see what the effect of sieve subchunk size on number of total operations, the time/space complexity tradeoff.
+
+-- I can implement a segmented sieve of Eratosthenes

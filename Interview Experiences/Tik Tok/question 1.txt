@@ -1,0 +1,3 @@
+Alice and Bob are eating candy, they must eat the same amount of candy in weight,
+what is the most number of candies they can eat, they Alice must eat from the left (prefix),
+Bob must eat from the right (suffix), they cannot skip over candies. Array problem.

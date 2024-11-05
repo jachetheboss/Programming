@@ -1,0 +1,60 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <ctime>
+
+using namespace std;
+
+// global variables go here!
+// You should make global variables all caps as your style!
+int num_distinct_prime_factors(int num){
+    int num_distinct = 0;
+    int limit = static_cast<int>(floor(sqrt(num)));
+    for(int k = 2; k < limit + 1; ++k){
+        if(num % k == 0){
+            num_distinct += 1;
+            while(num % k == 0){
+                num /= k;
+            }
+        }
+        if(num == 1){
+            break;
+        }
+    }
+    if(num != 1){ // if there is leftover in num > 1, then is guaranteed to be a prime larger than sqrt(num)
+        num_distinct += 1;
+    }
+    return num_distinct;
+}
+// BOTH while cin >> **my_variable** AND while fin >> **my_variable** are the standard
+// ways to read input from stdin and files
+int main(){
+    int ans = 0;
+    int streak = 0; // use streak instead of checking all four at once. all four at once is inefficient,
+                    // recalculating a lot of values. Streak is efficient!
+                    // Used this technique in LeetCode as well as Prog 1
+    int k = 2;
+    while(true){
+        if(num_distinct_prime_factors(k) == 4){
+            streak += 1;
+            if(streak == 4){
+                ans = k - 3;
+                break;
+            }
+        }else{
+            streak = 0;
+        }
+        k += 1;
+    }
+    cout << "ans: " << ans << '\n';
+
+    return 0;
+}

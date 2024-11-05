@@ -1,0 +1,153 @@
+/******************************************************************************
+
+                              Online C++ Compiler.
+               Code, Compile, Run and Debug C++ program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <cmath>
+#include <algorithm>
+#include <ctime>
+using namespace std;
+// global variables go here, might be a good idea to make them ALL CAPS!
+// maybe it is better to make a pair instead of a vector of size 2
+
+static bool comparator(vector<int> vec1, vector<int> vec2){
+    return vec1[0] < vec2[0];
+}
+
+vector<int> prime_factorize(int num){
+    int limit = static_cast<int>(floor(sqrt(num)));
+    vector<int> factors;
+    for(int k = 2; k < limit + 1; ++k){
+        if(num % k != 0){
+            continue;
+        }
+        int count = 0;
+        while(num % k == 0){
+            count += 1;
+            num /= k;
+        }
+        factors.push_back(k);
+        factors.push_back(count);
+        if(num == 1){
+            break;
+        }
+    }
+    if(num != 1){
+        factors.push_back(num);
+        factors.push_back(1);
+    }
+    return factors;
+}
+int main()
+{
+    int maximum = 0;
+    cout << "Type in a maximum: ";
+    cin >> maximum;
+    // Method 1: Prime factorize all numbers from 2 to maximum, inclusive.
+    clock_t start1 = clock();
+    unordered_map<int, int> hm1; // hm tracks total factors!
+    for(int k = 2; k <= maximum; ++k){ // this k variable is in a different scope from the k in the prime_factorize()
+                                   // function, so should be valid!
+        vector<int> factors = prime_factorize(k);
+        for(int i = 0; i < factors.size(); i += 2){
+            if(hm1.count(factors[i]) == false){
+                hm1.insert({factors[i], factors[i + 1]});
+            }else{
+                hm1[factors[i]] += factors[i + 1];
+            }
+        }
+    }
+    vector<vector<int>> total_factors_1;
+    unordered_map<int, int>::iterator it;
+    for(it = hm1.begin(); it != hm1.end(); ++it){
+        total_factors_1.push_back({it->first, it->second});
+    }
+    sort(total_factors_1.begin(), total_factors_1.end(), comparator); // sort to make comparison of factors
+                                                                      // easy, validate the correctness of methods.
+                                                                      // Could validate in O(n) time though just
+                                                                      // by checking via hashmap.
+    clock_t finish1 = clock();
+    // cout << "total_factors_1:" << '\n';
+    // for(int i = 0; i < total_factors_1.size(); ++i){
+    //     cout << '{' << total_factors_1[i][0] << ',' << total_factors_1[i][1] << '}' << ' ';
+    // } cout << '\n';
+    
+    
+    
+    // Method 2: Exploit from 2 to maximum, instead of calculating
+    // all prime factorizations, make use of divisibility of powers of prime factors.
+    // Find all prime factors less and equal to maximum, and determine
+    // how many times each prime number is included.
+    
+    
+    clock_t start2 = clock();
+    vector<bool> sieve (maximum + 1, true); // true means prime, false means composite
+    sieve[0] = false;
+    sieve[1] = false;
+    int limit = maximum / 2;
+    for(int k = 2; k < limit + 1; ++k){
+        if(sieve[k] == false){ // if already maked as composite, move on to next num
+            continue;
+        } // else true
+        for(int j = 2 * k; j < sieve.size(); j += k){
+            sieve[j] = false;
+        }
+    }
+    vector<vector<int>> total_factors_2;
+    for(int k = 2; k < sieve.size(); ++k){
+        if(sieve[k] == false){ // skip if composite
+            continue; // be a master at continue and break statements!
+        }
+        int count = 0; // how many copies of the prime factor
+        long power_of_k = k;
+        // if power_of_k is int, the algorithm gets fucked up.
+        // long time is vital so it does not overflow!
+        
+        // WHEN AN INT IS MULTIPLIED OR ADDED, MAKE SURE THAT IT WILL NEVER OVERFLOW DEPENDING ON 
+        // THE INPUT SIZES!!!!!!! IF OVERFLOW, COULD BECOME NEGATIVE, AND COMPARISON > < >= <= 
+        // BECOMES BROKEN! MAKE SURE TO BE AWARE OF OVERFLOWING OF NUMERIC TYPES.
+        // ALSO FOR C++ temporaries, INT times INT is INT TEMPORARY!
+        
+        while(power_of_k <= maximum){ // overflow is possible with this! Be careful!
+            count += maximum / power_of_k;
+            power_of_k *= k;
+        }
+        total_factors_2.push_back({k, count});
+    }
+    clock_t finish2 = clock();
+    
+    // cout << "total_factors_2:" << '\n';
+    // for(int i = 0; i < total_factors_2.size(); ++i){
+    //     cout << '{' << total_factors_2[i][0] << ',' << total_factors_2[i][1] << '}' << ' ';
+    // } cout << '\n';
+    
+    bool is_same = true;
+    if(total_factors_1.size() != total_factors_2.size()){
+        is_same = false;
+    }else{
+        for(int i = 0; i < total_factors_1.size(); ++i){
+            if(total_factors_1[i][0] != total_factors_2[i][0] || total_factors_1[i][1] != total_factors_2[i][1]){
+                is_same = false;
+                break;
+            }
+        }
+    }
+    if(is_same == true){
+        cout << "The two methods return the same total factorization!" << '\n';
+    }else{
+        cout << "The two methods return different factorizations. Check your work." << '\n';
+    }
+    cout << "Method 1 time elapsed: " << static_cast<float>(finish1 - start1) / CLOCKS_PER_SEC << " seconds\n";
+    cout << "Method 2 time elapsed: " << static_cast<float>(finish2 - start2) / CLOCKS_PER_SEC << " seconds\n";
+
+    
+    
+    
+    return 0;
+}
